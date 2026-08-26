@@ -1,0 +1,1 @@
+Coloca aquí el logo oficial: logo.png (o cambia la ruta en index.html).

@@ -1,1600 +1,256 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <meta name="theme-color" content="#07110a">
-
-    <meta name="description"
-          content="RefugioCraft - Servidor Minecraft Survival. Construye, explora, comercia y crea tu propia historia.">
-
-    <meta name="keywords"
-          content="Minecraft, RefugioCraft, Survival, Minecraft Colombia, servidor Minecraft">
-
-    <title>RefugioCraft | Servidor Survival Minecraft</title>
-
-    <style>
-
-        /* =========================================================
-           CONFIGURACIÓN GENERAL
-        ========================================================= */
-
-        :root {
-            --bg: #050806;
-            --bg-soft: #0a110c;
-            --card: #0d1710;
-            --card-hover: #122018;
-
-            --green: #45d66b;
-            --green-light: #7af08e;
-            --green-dark: #1f9d43;
-
-            --text: #ffffff;
-            --text-soft: #b7c0b9;
-            --border: rgba(104, 230, 125, 0.15);
-
-            --shadow:
-                0 20px 60px rgba(0, 0, 0, 0.45);
-
-            --radius: 18px;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family:
-                Inter,
-                system-ui,
-                -apple-system,
-                BlinkMacSystemFont,
-                "Segoe UI",
-                Arial,
-                sans-serif;
-
-            background: var(--bg);
-            color: var(--text);
-
-            line-height: 1.6;
-
-            overflow-x: hidden;
-        }
-
-        a {
-            color: inherit;
-            text-decoration: none;
-        }
-
-        button {
-            font: inherit;
-        }
-
-        ::selection {
-            background: var(--green);
-            color: #031006;
-        }
-
-
-        /* =========================================================
-           FONDO
-        ========================================================= */
-
-        body::before {
-            content: "";
-
-            position: fixed;
-            inset: 0;
-
-            pointer-events: none;
-
-            background:
-                radial-gradient(
-                    circle at 15% 20%,
-                    rgba(69, 214, 107, 0.10),
-                    transparent 30%
-                ),
-
-                radial-gradient(
-                    circle at 85% 30%,
-                    rgba(69, 214, 107, 0.07),
-                    transparent 28%
-                );
-
-            z-index: -1;
-        }
-
-
-        /* =========================================================
-           NAVBAR
-        ========================================================= */
-
-        .navbar {
-            position: fixed;
-
-            top: 0;
-            left: 0;
-            right: 0;
-
-            height: 72px;
-
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-
-            padding: 0 6%;
-
-            background: rgba(5, 8, 6, 0.82);
-
-            border-bottom:
-                1px solid rgba(255,255,255,0.06);
-
-            backdrop-filter: blur(14px);
-
-            z-index: 1000;
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-
-            font-size: 20px;
-            font-weight: 900;
-
-            letter-spacing: 0.5px;
-        }
-
-        .brand-icon {
-            width: 38px;
-            height: 38px;
-
-            display: grid;
-            place-items: center;
-
-            border-radius: 10px;
-
-            background:
-                linear-gradient(
-                    135deg,
-                    var(--green),
-                    var(--green-dark)
-                );
-
-            box-shadow:
-                0 0 25px rgba(69,214,107,0.25);
-        }
-
-        .brand span {
-            color: var(--green-light);
-        }
-
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 28px;
-        }
-
-        .nav-links a {
-            color: var(--text-soft);
-
-            font-size: 14px;
-            font-weight: 600;
-
-            transition: 0.25s ease;
-        }
-
-        .nav-links a:hover {
-            color: var(--green-light);
-        }
-
-
-        /* =========================================================
-           HERO
-        ========================================================= */
-
-        .hero {
-            min-height: 100vh;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            text-align: center;
-
-            padding:
-                130px 20px
-                90px;
-
-            position: relative;
-
-            background:
-                radial-gradient(
-                    circle at center,
-                    rgba(45, 132, 65, 0.22),
-                    transparent 40%
-                );
-        }
-
-        .hero::after {
-            content: "";
-
-            position: absolute;
-
-            bottom: -1px;
-            left: 0;
-            right: 0;
-
-            height: 180px;
-
-            background:
-                linear-gradient(
-                    transparent,
-                    var(--bg)
-                );
-
-            pointer-events: none;
-        }
-
-        .hero-content {
-            max-width: 950px;
-
-            position: relative;
-            z-index: 2;
-
-            animation:
-                heroAppear 0.9s ease forwards;
-        }
-
-        @keyframes heroAppear {
-            from {
-                opacity: 0;
-                transform: translateY(25px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .server-badge {
-            display: inline-flex;
-
-            align-items: center;
-            gap: 8px;
-
-            padding: 8px 14px;
-
-            border:
-                1px solid
-                rgba(69,214,107,0.25);
-
-            background:
-                rgba(69,214,107,0.07);
-
-            border-radius: 999px;
-
-            color: var(--green-light);
-
-            font-size: 13px;
-            font-weight: 700;
-
-            margin-bottom: 24px;
-        }
-
-        .status-dot {
-            width: 8px;
-            height: 8px;
-
-            border-radius: 50%;
-
-            background: var(--green);
-
-            box-shadow:
-                0 0 12px var(--green);
-        }
-
-        .hero h1 {
-            font-size:
-                clamp(
-                    48px,
-                    9vw,
-                    100px
-                );
-
-            line-height: 0.95;
-
-            font-weight: 950;
-
-            letter-spacing: -4px;
-
-            color: white;
-
-            text-shadow:
-                0 10px 40px
-                rgba(0,0,0,0.5);
-        }
-
-        .hero h1 span {
-            color: var(--green);
-
-            text-shadow:
-                0 0 35px
-                rgba(69,214,107,0.25);
-        }
-
-        .hero-subtitle {
-            max-width: 700px;
-
-            margin:
-                25px auto
-                35px;
-
-            color: var(--text-soft);
-
-            font-size:
-                clamp(
-                    17px,
-                    2.5vw,
-                    21px
-                );
-        }
-
-
-        /* =========================================================
-           IP SERVER
-        ========================================================= */
-
-        .server-ip {
-            display: inline-flex;
-
-            align-items: center;
-            gap: 10px;
-
-            padding: 7px;
-
-            border:
-                1px solid
-                rgba(255,255,255,0.10);
-
-            background:
-                rgba(255,255,255,0.045);
-
-            border-radius: 14px;
-
-            margin-bottom: 24px;
-        }
-
-        .ip-text {
-            padding: 10px 14px;
-
-            font-family:
-                ui-monospace,
-                SFMono-Regular,
-                Menlo,
-                Consolas,
-                monospace;
-
-            color: #eaffed;
-
-            font-size: 14px;
-        }
-
-        .copy-ip {
-            border: 0;
-
-            padding: 10px 15px;
-
-            border-radius: 10px;
-
-            background: var(--green);
-
-            color: #041007;
-
-            font-weight: 900;
-
-            cursor: pointer;
-
-            transition: 0.2s ease;
-        }
-
-        .copy-ip:hover {
-            background: var(--green-light);
-
-            transform: translateY(-1px);
-        }
-
-
-        /* =========================================================
-           BOTONES
-        ========================================================= */
-
-        .hero-buttons {
-            display: flex;
-
-            justify-content: center;
-
-            align-items: center;
-
-            gap: 12px;
-
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            display: inline-flex;
-
-            align-items: center;
-            justify-content: center;
-
-            gap: 9px;
-
-            min-height: 50px;
-
-            padding:
-                0 22px;
-
-            border-radius: 12px;
-
-            font-weight: 800;
-
-            font-size: 14px;
-
-            transition:
-                transform 0.2s ease,
-                background 0.2s ease,
-                border 0.2s ease;
-
-            cursor: pointer;
-        }
-
-        .btn-primary {
-            background:
-                linear-gradient(
-                    135deg,
-                    var(--green),
-                    var(--green-dark)
-                );
-
-            color: #041007;
-
-            box-shadow:
-                0 12px 35px
-                rgba(69,214,107,0.18);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-3px);
-
-            box-shadow:
-                0 18px 40px
-                rgba(69,214,107,0.25);
-        }
-
-        .btn-secondary {
-            background:
-                rgba(255,255,255,0.05);
-
-            border:
-                1px solid
-                rgba(255,255,255,0.10);
-
-            color: white;
-        }
-
-        .btn-secondary:hover {
-            transform: translateY(-3px);
-
-            background:
-                rgba(255,255,255,0.09);
-        }
-
-
-        /* =========================================================
-           SECCIONES
-        ========================================================= */
-
-        section {
-            width: min(1120px, 92%);
-
-            margin: 0 auto;
-
-            padding:
-                90px 0;
-        }
-
-        .section-header {
-            text-align: center;
-
-            max-width: 700px;
-
-            margin:
-                0 auto
-                50px;
-        }
-
-        .section-label {
-            color: var(--green);
-
-            font-size: 12px;
-
-            font-weight: 900;
-
-            text-transform: uppercase;
-
-            letter-spacing: 2px;
-
-            margin-bottom: 10px;
-        }
-
-        .section-title {
-            font-size:
-                clamp(
-                    32px,
-                    5vw,
-                    48px
-                );
-
-            line-height: 1.1;
-
-            margin-bottom: 15px;
-        }
-
-        .section-description {
-            color: var(--text-soft);
-
-            font-size: 16px;
-        }
-
-
-        /* =========================================================
-           CARACTERÍSTICAS
-        ========================================================= */
-
-        .features {
-            display: grid;
-
-            grid-template-columns:
-                repeat(
-                    4,
-                    1fr
-                );
-
-            gap: 16px;
-        }
-
-        .feature-card {
-            padding: 28px;
-
-            background:
-                linear-gradient(
-                    180deg,
-                    rgba(255,255,255,0.035),
-                    rgba(255,255,255,0.015)
-                );
-
-            border:
-                1px solid
-                var(--border);
-
-            border-radius:
-                var(--radius);
-
-            transition:
-                0.3s ease;
-        }
-
-        .feature-card:hover {
-            transform:
-                translateY(-6px);
-
-            border-color:
-                rgba(69,214,107,0.30);
-
-            background:
-                var(--card-hover);
-
-            box-shadow:
-                var(--shadow);
-        }
-
-        .feature-icon {
-            width: 54px;
-            height: 54px;
-
-            display: grid;
-            place-items: center;
-
-            border-radius: 14px;
-
-            background:
-                rgba(69,214,107,0.09);
-
-            font-size: 26px;
-
-            margin-bottom: 20px;
-        }
-
-        .feature-card h3 {
-            margin-bottom: 8px;
-
-            font-size: 18px;
-        }
-
-        .feature-card p {
-            color: var(--text-soft);
-
-            font-size: 14px;
-        }
-
-
-        /* =========================================================
-           JUGAR EN JAVA / BEDROCK
-        ========================================================= */
-
-        .platforms {
-            display: grid;
-
-            grid-template-columns:
-                repeat(
-                    2,
-                    1fr
-                );
-
-            gap: 18px;
-        }
-
-        .platform-card {
-            padding: 30px;
-
-            border:
-                1px solid
-                var(--border);
-
-            background:
-                var(--card);
-
-            border-radius:
-                var(--radius);
-
-            display: flex;
-
-            align-items: center;
-
-            gap: 20px;
-        }
-
-        .platform-icon {
-            width: 60px;
-            height: 60px;
-
-            flex-shrink: 0;
-
-            display: grid;
-            place-items: center;
-
-            border-radius: 15px;
-
-            background:
-                rgba(69,214,107,0.10);
-
-            font-size: 30px;
-        }
-
-        .platform-card h3 {
-            margin-bottom: 5px;
-        }
-
-        .platform-card p {
-            color: var(--text-soft);
-
-            font-size: 14px;
-        }
-
-
-        /* =========================================================
-           CÓMO JUGAR
-        ========================================================= */
-
-        .steps {
-            display: grid;
-
-            grid-template-columns:
-                repeat(
-                    3,
-                    1fr
-                );
-
-            gap: 18px;
-        }
-
-        .step {
-            position: relative;
-
-            padding: 28px;
-
-            border-radius:
-                var(--radius);
-
-            background:
-                var(--card);
-
-            border:
-                1px solid
-                var(--border);
-        }
-
-        .step-number {
-            width: 38px;
-            height: 38px;
-
-            display: grid;
-            place-items: center;
-
-            border-radius: 50%;
-
-            background:
-                var(--green);
-
-            color: #041007;
-
-            font-weight: 950;
-
-            margin-bottom: 18px;
-        }
-
-        .step h3 {
-            margin-bottom: 8px;
-        }
-
-        .step p {
-            color: var(--text-soft);
-
-            font-size: 14px;
-        }
-
-
-        /* =========================================================
-           CTA FINAL
-        ========================================================= */
-
-        .cta {
-            width: min(1120px, 92%);
-
-            margin:
-                30px auto
-                90px;
-
-            padding:
-                70px 30px;
-
-            text-align: center;
-
-            border-radius:
-                24px;
-
-            border:
-                1px solid
-                rgba(69,214,107,0.20);
-
-            background:
-                radial-gradient(
-                    circle at center,
-                    rgba(69,214,107,0.13),
-                    rgba(10,17,12,0.9) 65%
-                );
-        }
-
-        .cta h2 {
-            font-size:
-                clamp(
-                    34px,
-                    5vw,
-                    52px
-                );
-
-            margin-bottom: 12px;
-        }
-
-        .cta p {
-            color: var(--text-soft);
-
-            margin-bottom: 28px;
-        }
-
-
-        /* =========================================================
-           FOOTER
-        ========================================================= */
-
-        footer {
-            border-top:
-                1px solid
-                rgba(255,255,255,0.06);
-
-            padding:
-                35px 20px;
-
-            text-align: center;
-
-            color: #737b75;
-
-            font-size: 13px;
-        }
-
-        .footer-brand {
-            color: var(--green-light);
-
-            font-weight: 900;
-
-            margin-bottom: 6px;
-        }
-
-
-        /* =========================================================
-           NOTIFICACIÓN COPIADO
-        ========================================================= */
-
-        .toast {
-            position: fixed;
-
-            left: 50%;
-            bottom: 25px;
-
-            transform:
-                translate(
-                    -50%,
-                    20px
-                );
-
-            opacity: 0;
-
-            pointer-events: none;
-
-            padding:
-                12px 18px;
-
-            border-radius: 10px;
-
-            background:
-                #142019;
-
-            border:
-                1px solid
-                rgba(69,214,107,0.25);
-
-            color: white;
-
-            font-size: 14px;
-
-            z-index: 2000;
-
-            transition:
-                0.25s ease;
-        }
-
-        .toast.show {
-            opacity: 1;
-
-            transform:
-                translate(
-                    -50%,
-                    0
-                );
-        }
-
-
-        /* =========================================================
-           RESPONSIVE
-        ========================================================= */
-
-        @media (max-width: 900px) {
-
-            .features {
-                grid-template-columns:
-                    repeat(
-                        2,
-                        1fr
-                    );
-            }
-
-            .steps {
-                grid-template-columns:
-                    1fr;
-            }
-        }
-
-        @media (max-width: 700px) {
-
-            .navbar {
-                height: 64px;
-
-                padding:
-                    0 20px;
-            }
-
-            .nav-links {
-                display: none;
-            }
-
-            .hero {
-                padding-top: 110px;
-            }
-
-            .hero h1 {
-                letter-spacing: -2px;
-            }
-
-            .server-ip {
-                width: 100%;
-
-                justify-content:
-                    space-between;
-            }
-
-            .ip-text {
-                overflow: hidden;
-
-                text-overflow: ellipsis;
-
-                white-space: nowrap;
-            }
-
-            .features,
-            .platforms {
-                grid-template-columns:
-                    1fr;
-            }
-
-            section {
-                padding:
-                    70px 0;
-            }
-        }
-
-        @media (max-width: 450px) {
-
-            .brand {
-                font-size: 17px;
-            }
-
-            .brand-icon {
-                width: 34px;
-                height: 34px;
-            }
-
-            .hero {
-                padding-left: 15px;
-                padding-right: 15px;
-            }
-
-            .server-ip {
-                padding: 5px;
-            }
-
-            .ip-text {
-                font-size: 12px;
-
-                padding:
-                    9px 8px;
-            }
-
-            .copy-ip {
-                font-size: 12px;
-
-                padding:
-                    9px 11px;
-            }
-
-            .btn {
-                width: 100%;
-            }
-
-            .hero-buttons {
-                width: 100%;
-            }
-
-            .feature-card,
-            .platform-card,
-            .step {
-                padding: 24px;
-            }
-        }
-
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="RefugioCraft — servidor Survival Minecraft 1.21.11. Construye, explora, comercia y crea tu historia.">
+  <title>RefugioCraft | Survival Minecraft</title>
+  <link rel="icon" href="assets/images/logo.png">
+  <link rel="stylesheet" href="assets/css/style.css">
 </head>
-
-
 <body>
+  <div class="site-noise"></div>
 
+  <header class="topbar" id="top">
+    <a class="brand" href="#inicio" aria-label="RefugioCraft inicio">
+      <div class="brand-mark">🛡️</div>
+      <div>
+        <strong>REFUGIO<span>CRAFT</span></strong>
+        <small>SURVIVAL • 1.21.11</small>
+      </div>
+    </a>
 
-    <!-- =========================================================
-         NAVEGACIÓN
-    ========================================================== -->
-
-    <nav class="navbar">
-
-        <a href="#" class="brand">
-
-            <div class="brand-icon">
-                🛡️
-            </div>
-
-            REFUGIO<span>CRAFT</span>
-
-        </a>
-
-
-        <div class="nav-links">
-
-            <a href="#servidor">
-                Servidor
-            </a>
-
-            <a href="#caracteristicas">
-                Características
-            </a>
-
-            <a href="#como-jugar">
-                Cómo jugar
-            </a>
-
-            <a href="#entrar">
-                Jugar
-            </a>
-
-        </div>
-
+    <button class="nav-toggle" aria-label="Abrir menú">☰</button>
+    <nav class="nav">
+      <a href="#inicio">Inicio</a>
+      <a href="#servidor">Servidor</a>
+      <a href="#aventura">Aventura</a>
+      <a href="#rangos">Rangos</a>
+      <a href="#cofres">Cofres</a>
+      <a href="#tutoriales">Tutoriales</a>
+      <a href="#galeria">Galería</a>
+      <a href="#comunidad">Comunidad</a>
     </nav>
+  </header>
 
-
-
-    <!-- =========================================================
-         HERO
-    ========================================================== -->
-
-    <header class="hero">
-
-        <div class="hero-content">
-
-
-            <div class="server-badge">
-
-                <span class="status-dot"></span>
-
-                SERVIDOR SURVIVAL MINECRAFT
-
-            </div>
-
-
-            <h1>
-
-                REFUGIO<span>CRAFT</span>
-
-            </h1>
-
-
-            <p class="hero-subtitle">
-
-                Tu aventura.
-                Tu refugio.
-                Tu historia.
-
-                <br>
-
-                Construye, explora, comercia
-                y crea tu propia historia.
-
-            </p>
-
-
-            <!-- IP DEL SERVIDOR -->
-
-            <div class="server-ip">
-
-                <span class="ip-text"
-                      id="serverIP">
-
-                    CAMBIAR-IP-AQUI
-
-                </span>
-
-                <button
-                    class="copy-ip"
-                    onclick="copyIP()">
-
-                    COPIAR IP
-
-                </button>
-
-            </div>
-
-
-            <div class="hero-buttons">
-
-                <a
-                    href="#entrar"
-                    class="btn btn-primary">
-
-                    🎮 JUGAR AHORA
-
-                </a>
-
-
-                <!-- CAMBIAR AQUÍ: LINK DISCORD -->
-
-                <a
-                    href="https://discord.com/"
-                    target="_blank"
-                    rel="noopener"
-                    class="btn btn-secondary">
-
-                    💬 DISCORD
-
-                </a>
-
-            </div>
-
+  <main>
+    <section class="hero section" id="inicio">
+      <div class="hero-content">
+        <div class="eyebrow">SERVIDOR SURVIVAL MINECRAFT</div>
+        <h1>Tu aventura.<br><span>Tu refugio.</span><br>Tu historia.</h1>
+        <p>Construye, explora, comercia, protege tu hogar y crea una historia que sea solo tuya.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#servidor">🎮 JUGAR AHORA</a>
+          <a class="btn btn-ghost" href="#tutoriales">📚 APRENDER A JUGAR</a>
         </div>
-
-    </header>
-
-
-
-    <!-- =========================================================
-         SERVIDOR
-    ========================================================== -->
-
-    <section id="servidor">
-
-        <div class="section-header">
-
-            <div class="section-label">
-                REFUGIOCRAFT
-            </div>
-
-            <h2 class="section-title">
-                Un survival diferente
-            </h2>
-
-            <p class="section-description">
-
-                Una comunidad donde cada jugador
-                puede construir, progresar y crear
-                su propio refugio.
-
-            </p>
-
+        <div class="hero-server-chip">
+          <span class="online-dot"></span>
+          <span>RefugioCraft está preparado para recibirte</span>
         </div>
-
-
-        <div class="platforms">
-
-
-            <div class="platform-card">
-
-                <div class="platform-icon">
-                    🖥️
-                </div>
-
-                <div>
-
-                    <h3>
-                        Minecraft Java
-                    </h3>
-
-                    <p>
-                        Entra desde Minecraft Java
-                        y disfruta del servidor.
-                    </p>
-
-                </div>
-
-            </div>
-
-
-            <div class="platform-card">
-
-                <div class="platform-icon">
-                    📱
-                </div>
-
-                <div>
-
-                    <h3>
-                        Minecraft Bedrock
-                    </h3>
-
-                    <p>
-                        También puedes jugar desde
-                        dispositivos Bedrock mediante
-                        Geyser.
-                    </p>
-
-                </div>
-
-            </div>
-
-
+      </div>
+      <div class="hero-art">
+        <div class="hero-card main">
+          <div class="pixel-sky"></div>
+          <div class="mountain mountain-1"></div>
+          <div class="mountain mountain-2"></div>
+          <div class="hero-building">🏠</div>
+          <div class="hero-sign">REFUGIOCRAFT</div>
         </div>
-
+        <div class="floating-stat stat-1"><strong>1.21.11</strong><span>Survival</span></div>
+        <div class="floating-stat stat-2"><strong>JAVA + BEDROCK</strong><span>Crossplay</span></div>
+      </div>
     </section>
 
-
-
-    <!-- =========================================================
-         CARACTERÍSTICAS
-    ========================================================== -->
-
-    <section id="caracteristicas">
-
-        <div class="section-header">
-
-            <div class="section-label">
-                NUESTRA COMUNIDAD
-            </div>
-
-            <h2 class="section-title">
-                Todo lo que puedes hacer
-            </h2>
-
-            <p class="section-description">
-
-                RefugioCraft está pensado para que
-                siempre tengas algo que hacer.
-
-            </p>
-
+    <section class="quick-server">
+      <div class="quick-inner">
+        <div class="quick-label">CONECTA AHORA</div>
+        <div class="connection">
+          <span class="connection-title">JAVA</span>
+          <code id="javaIp">209.222.97.218:25613</code>
+          <button class="copy-btn" data-copy="javaIp">COPIAR</button>
         </div>
-
-
-        <div class="features">
-
-
-            <article class="feature-card">
-
-                <div class="feature-icon">
-                    🏠
-                </div>
-
-                <h3>
-                    Protege tu hogar
-                </h3>
-
-                <p>
-                    Construye tu base y protege
-                    tus pertenencias.
-                </p>
-
-            </article>
-
-
-            <article class="feature-card">
-
-                <div class="feature-icon">
-                    💰
-                </div>
-
-                <h3>
-                    Economía
-                </h3>
-
-                <p>
-                    Compra, vende y consigue
-                    dinero dentro del servidor.
-                </p>
-
-            </article>
-
-
-            <article class="feature-card">
-
-                <div class="feature-icon">
-                    🌎
-                </div>
-
-                <h3>
-                    Explora
-                </h3>
-
-                <p>
-                    Descubre nuevos lugares,
-                    biomas y zonas especiales.
-                </p>
-
-            </article>
-
-
-            <article class="feature-card">
-
-                <div class="feature-icon">
-                    🎁
-                </div>
-
-                <h3>
-                    Recompensas
-                </h3>
-
-                <p>
-                    Participa en la comunidad
-                    y consigue recompensas.
-                </p>
-
-            </article>
-
-
+        <div class="connection">
+          <span class="connection-title">BEDROCK</span>
+          <code id="bedrockIp">209.222.97.218</code>
+          <span class="port">PUERTO 24456</span>
+          <button class="copy-btn" data-copy="bedrockIp">COPIAR IP</button>
         </div>
-
+      </div>
     </section>
 
+    <section class="section" id="servidor">
+      <div class="section-heading">
+        <div class="eyebrow">EL CORAZÓN DE REFUGIOCRAFT</div>
+        <h2>Un Survival diferente</h2>
+        <p>Una experiencia enfocada en progreso, comunidad, economía, protección y aventura.</p>
+      </div>
+      <div class="feature-grid">
+        <article class="feature-card"><div class="feature-icon">🏠</div><h3>Tu refugio</h3><p>Protege tus construcciones con terrenos y construye tu hogar a tu manera.</p></article>
+        <article class="feature-card"><div class="feature-icon">💰</div><h3>Economía</h3><p>Compra, vende, trabaja, comercia y haz crecer tu patrimonio en Refugias.</p></article>
+        <article class="feature-card"><div class="feature-icon">🧭</div><h3>Exploración</h3><p>Descubre biomas, zonas especiales, warps y nuevos lugares para aventurarte.</p></article>
+        <article class="feature-card"><div class="feature-icon">🎁</div><h3>Recompensas</h3><p>Cofres, eventos, llaves y premios para mantener siempre algo nuevo por conseguir.</p></article>
+        <article class="feature-card"><div class="feature-icon">⚔️</div><h3>Clanes</h3><p>Forma equipos, crea alianzas, compite y deja tu nombre en la historia del servidor.</p></article>
+        <article class="feature-card"><div class="feature-icon">✨</div><h3>Cosméticos</h3><p>Personaliza tu presencia y haz que tu personaje se reconozca al instante.</p></article>
+      </div>
+    </section>
 
-
-    <!-- =========================================================
-         CÓMO JUGAR
-    ========================================================== -->
-
-    <section id="como-jugar">
-
-        <div class="section-header">
-
-            <div class="section-label">
-                EMPIEZA TU AVENTURA
-            </div>
-
-            <h2 class="section-title">
-                ¿Cómo jugar?
-            </h2>
-
-            <p class="section-description">
-
-                Entrar a RefugioCraft es sencillo.
-
-            </p>
-
-        </div>
-
-
+    <section class="section split-section" id="aventura">
+      <div>
+        <div class="eyebrow">TU PROGRESO</div>
+        <h2>Empieza pequeño.<br><span>Termina con una historia.</span></h2>
+        <p>En RefugioCraft puedes comenzar con lo básico y avanzar a tu propio ritmo. No hay una sola forma de jugar.</p>
         <div class="steps">
-
-
-            <div class="step">
-
-                <div class="step-number">
-                    1
-                </div>
-
-                <h3>
-                    Entra al servidor
-                </h3>
-
-                <p>
-                    Utiliza la IP de RefugioCraft
-                    desde Minecraft.
-                </p>
-
-            </div>
-
-
-            <div class="step">
-
-                <div class="step-number">
-                    2
-                </div>
-
-                <h3>
-                    Crea tu refugio
-                </h3>
-
-                <p>
-                    Explora el mundo, consigue
-                    recursos y construye tu hogar.
-                </p>
-
-            </div>
-
-
-            <div class="step">
-
-                <div class="step-number">
-                    3
-                </div>
-
-                <h3>
-                    Progresa
-                </h3>
-
-                <p>
-                    Comercia, consigue dinero,
-                    explora y forma parte de
-                    la comunidad.
-                </p>
-
-            </div>
-
-
+          <div class="step"><b>01</b><div><h3>Entra</h3><p>Conecta desde Java o Bedrock.</p></div></div>
+          <div class="step"><b>02</b><div><h3>Construye</h3><p>Busca un lugar y crea tu primer refugio.</p></div></div>
+          <div class="step"><b>03</b><div><h3>Progresa</h3><p>Trabaja, comercia, explora y mejora tu economía.</p></div></div>
+          <div class="step"><b>04</b><div><h3>Haz historia</h3><p>Únete a clanes, participa en eventos y deja tu huella.</p></div></div>
         </div>
-
+      </div>
+      <div class="media-placeholder">
+        <div class="placeholder-icon">🎥</div>
+        <h3>ESPACIO PARA TRÁILER</h3>
+        <p>Reemplaza este bloque por tu video de YouTube.</p>
+        <small>VIDEO_ID_TRÁILER</small>
+      </div>
     </section>
 
+    <section class="section dark-panel" id="rangos">
+      <div class="section-heading">
+        <div class="eyebrow">APOYA AL SERVIDOR</div>
+        <h2>Rangos permanentes</h2>
+        <p>Una sola compra. Beneficios permanentes y recompensas dentro del servidor.</p>
+      </div>
 
+      <div class="rank-grid">
+        <article class="rank-card star">
+          <div class="rank-top"><span class="rank-badge">⭐</span><div><h3>ESTRELLA</h3><small>$9.900 COP</small></div></div>
+          <div class="price-line">450.000 <span>Refugias al comprar</span></div>
+          <ul>
+            <li>8 homes</li><li>10 regiones DGClaims</li><li>2 Jobs</li><li>Prefijo y color especial</li>
+            <li>Cosméticos básicos</li><li>/nick • /hat • /craft</li><li>Kit inicial</li>
+            <li>80.000 Refugias cada semana</li><li>2 Comunes + 1 Rara semanal</li>
+          </ul>
+        </article>
 
-    <!-- =========================================================
-         CTA
-    ========================================================== -->
+        <article class="rank-card veteran featured">
+          <div class="popular">MÁS VENDIDO</div>
+          <div class="rank-top"><span class="rank-badge">🔷</span><div><h3>VETERANO</h3><small>$19.900 COP</small></div></div>
+          <div class="price-line">900.000 <span>Refugias al comprar</span></div>
+          <ul>
+            <li>12 homes</li><li>20 regiones DGClaims</li><li>3 Jobs</li><li>Prefijo y chat especial</li>
+            <li>Cosméticos avanzados</li><li>/nick • /hat • /craft</li><li>Kit inicial mejorado</li>
+            <li>150.000 Refugias cada semana</li><li>500.000 Refugias cada mes</li><li>3 Comunes + 1 Rara + 1 Épica semanal</li><li>1 Legendaria mensual</li>
+          </ul>
+        </article>
 
-    <section id="entrar" class="cta">
-
-        <div class="section-label">
-            TU AVENTURA COMIENZA AQUÍ
-        </div>
-
-
-        <h2>
-            ¿Listo para entrar?
-        </h2>
-
-
-        <p>
-            Únete a RefugioCraft y comienza
-            a construir tu historia.
-        </p>
-
-
-        <div class="server-ip">
-
-            <span class="ip-text"
-                  id="serverIPBottom">
-
-                CAMBIAR-IP-AQUI
-
-            </span>
-
-            <button
-                class="copy-ip"
-                onclick="copyIP()">
-
-                COPIAR IP
-
-            </button>
-
-        </div>
-
-
-        <br>
-
-
-        <!-- CAMBIAR AQUÍ: LINK DISCORD -->
-
-        <a
-            href="https://discord.com/"
-            target="_blank"
-            rel="noopener"
-            class="btn btn-primary">
-
-            🚀 UNIRME A REFUGIOCRAFT
-
-        </a>
-
+        <article class="rank-card vip">
+          <div class="rank-top"><span class="rank-badge">💜</span><div><h3>VIP</h3><small>$34.900 COP</small></div></div>
+          <div class="price-line">1.500.000 <span>Refugias al comprar</span></div>
+          <ul>
+            <li>16 homes</li><li>30 regiones DGClaims</li><li>4 Jobs</li><li>Prefijo y chat VIP</li>
+            <li>Cosméticos premium</li><li>/nick • /hat • /craft</li><li>Kit inicial premium</li>
+            <li>250.000 Refugias cada semana</li><li>1.000.000 Refugias cada mes</li><li>4 Comunes + 2 Raras + 1 Épica semanal</li><li>1 Legendaria mensual</li>
+          </ul>
+        </article>
+      </div>
+      <div class="note-box">🟣 <strong>Mítica no se vende como rango.</strong> Es la recompensa máxima reservada para eventos, torneos, concursos y premios especiales.</div>
     </section>
 
+    <section class="section" id="cofres">
+      <div class="section-heading">
+        <div class="eyebrow">RECOMPENSAS</div>
+        <h2>Los cofres de RefugioCraft</h2>
+        <p>Presentación visual para mostrar las recompensas reales de cada cofre.</p>
+      </div>
+      <div class="crate-grid">
+        <article class="crate-card common"><div class="crate-icon">🟢</div><h3>COMÚN</h3><p>Recursos básicos, comida, hierro, redstone, diamantes y Refugias.</p><span>VER RECOMPENSAS</span></article>
+        <article class="crate-card rare"><div class="crate-icon">🔵</div><h3>RARO</h3><p>Herramientas de diamante, recursos, experiencia, cuarzo, oro y pociones.</p><span>VER RECOMPENSAS</span></article>
+        <article class="crate-card epic"><div class="crate-icon">🟣</div><h3>ÉPICO</h3><p>Equipo de diamante, Poder V, recursos, pociones, Mending y experiencia.</p><span>VER RECOMPENSAS</span></article>
+        <article class="crate-card legendary"><div class="crate-icon">🟠</div><h3>LEGENDARIO</h3><p>Equipo encantado, diamantes, oro, pociones, XP y manzanas doradas encantadas.</p><span>VER RECOMPENSAS</span></article>
+        <article class="crate-card mythic"><div class="crate-icon">🔴</div><h3>MÍTICO</h3><p>Elytra, netherita, tótems y equipo encantado. Exclusivo de eventos.</p><span>SOLO EVENTOS</span></article>
+      </div>
+    </section>
 
+    <section class="section media-section" id="tutoriales">
+      <div class="section-heading">
+        <div class="eyebrow">APRENDE A JUGAR</div>
+        <h2>Tutoriales</h2>
+        <p>Deja aquí tus videos de YouTube. Solo cambia cada VIDEO_ID.</p>
+      </div>
+      <div class="video-grid">
+        <div class="video-placeholder"><div class="play">▶</div><h3>Cómo entrar desde Java</h3><p>VIDEO_ID_JAVA</p></div>
+        <div class="video-placeholder"><div class="play">▶</div><h3>Cómo entrar desde Bedrock</h3><p>VIDEO_ID_BEDROCK</p></div>
+        <div class="video-placeholder"><div class="play">▶</div><h3>Cómo proteger tu terreno</h3><p>VIDEO_ID_DGCLAIMS</p></div>
+        <div class="video-placeholder"><div class="play">▶</div><h3>Cómo usar Jobs</h3><p>VIDEO_ID_JOBS</p></div>
+        <div class="video-placeholder"><div class="play">▶</div><h3>Cómo crear un clan</h3><p>VIDEO_ID_CLANES</p></div>
+        <div class="video-placeholder"><div class="play">▶</div><h3>Cómo funcionan las llaves</h3><p>VIDEO_ID_COFRES</p></div>
+      </div>
+    </section>
 
-    <!-- =========================================================
-         FOOTER
-    ========================================================== -->
+    <section class="section" id="galeria">
+      <div class="section-heading">
+        <div class="eyebrow">VIVE REFUGIOCRAFT</div>
+        <h2>Galería</h2>
+        <p>Espacios preparados para tus capturas reales del servidor.</p>
+      </div>
+      <div class="gallery">
+        <div class="image-slot large">FOTO / SPAWN</div>
+        <div class="image-slot">FOTO / CONSTRUCCIÓN</div>
+        <div class="image-slot">FOTO / EVENTO</div>
+        <div class="image-slot">FOTO / TERRENOS</div>
+        <div class="image-slot">FOTO / COFRES</div>
+        <div class="image-slot">FOTO / COMUNIDAD</div>
+      </div>
+    </section>
 
-    <footer>
-
-        <div class="footer-brand">
-            🛡️ REFUGIOCRAFT
+    <section class="section two-col" id="comunidad">
+      <div class="glass-card">
+        <div class="eyebrow">COMUNIDAD</div>
+        <h2>Un servidor hecho para quedarse</h2>
+        <p>Clanes, eventos, economía, exploración y una comunidad donde cada jugador puede crear su propio refugio.</p>
+        <div class="community-buttons">
+          <a class="btn btn-primary" href="#" aria-label="Discord de RefugioCraft">💬 DISCORD</a>
+          <a class="btn btn-ghost" href="#" aria-label="TikTok de RefugioCraft">🎵 TIKTOK</a>
         </div>
-
-        <div>
-            Servidor Survival Minecraft
+      </div>
+      <div class="glass-card">
+        <div class="eyebrow">REGLAS Y AYUDA</div>
+        <h2>Todo en un solo sitio</h2>
+        <div class="link-list">
+          <a href="#">📜 Reglas del servidor <span>→</span></a>
+          <a href="#tutoriales">📘 Centro de tutoriales <span>→</span></a>
+          <a href="#cofres">🎁 Recompensas de cofres <span>→</span></a>
+          <a href="#rangos">💎 Beneficios de rangos <span>→</span></a>
+          <a href="#">❓ Preguntas frecuentes <span>→</span></a>
         </div>
+      </div>
+    </section>
 
-        <br>
-
-        <div>
-            © 2026 RefugioCraft.
-            Todos los derechos reservados.
+    <section class="cta section">
+      <div class="cta-card">
+        <div class="eyebrow">TU HISTORIA COMIENZA AQUÍ</div>
+        <h2>¿Listo para construir<br><span>tu refugio?</span></h2>
+        <p>Conéctate desde Java o Bedrock y entra a la comunidad de RefugioCraft.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#servidor">🎮 JUGAR AHORA</a>
+          <button class="btn btn-ghost" id="copyJavaBottom">📋 COPIAR IP JAVA</button>
         </div>
+      </div>
+    </section>
+  </main>
 
-    </footer>
-
-
-
-    <!-- =========================================================
-         NOTIFICACIÓN
-    ========================================================== -->
-
-    <div
-        id="toast"
-        class="toast">
-
-        ✅ IP copiada correctamente
-
+  <footer class="footer">
+    <div>
+      <strong>🛡️ REFUGIOCRAFT</strong>
+      <p>Servidor Survival Minecraft • 1.21.11</p>
     </div>
+    <div class="footer-links">
+      <a href="#inicio">Inicio</a><a href="#rangos">Rangos</a><a href="#cofres">Cofres</a><a href="#tutoriales">Tutoriales</a>
+    </div>
+    <div>© 2026 RefugioCraft</div>
+  </footer>
 
-
-
-    <!-- =========================================================
-         JAVASCRIPT
-    ========================================================== -->
-
-    <script>
-
-        function copyIP() {
-
-            const ip =
-                document
-                .getElementById("serverIP")
-                .innerText
-                .trim();
-
-            if (
-                !ip ||
-                ip === "CAMBIAR-IP-AQUI"
-            ) {
-
-                showToast(
-                    "⚠️ Primero debemos configurar la IP"
-                );
-
-                return;
-            }
-
-
-            navigator.clipboard
-                .writeText(ip)
-                .then(() => {
-
-                    showToast(
-                        "✅ IP copiada correctamente"
-                    );
-
-                })
-                .catch(() => {
-
-                    showToast(
-                        "❌ No se pudo copiar la IP"
-                    );
-
-                });
-
-        }
-
-
-        function showToast(message) {
-
-            const toast =
-                document.getElementById("toast");
-
-            toast.innerText = message;
-
-            toast.classList.add("show");
-
-
-            setTimeout(() => {
-
-                toast.classList.remove("show");
-
-            }, 2500);
-
-        }
-
-    </script>
-
-
+  <div id="toast" class="toast">IP copiada correctamente</div>
+  <script src="assets/js/app.js"></script>
 </body>
 </html>

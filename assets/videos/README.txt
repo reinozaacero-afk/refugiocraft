@@ -1,0 +1,1 @@
+Los videos se pueden incrustar desde YouTube usando su VIDEO_ID en index.html.
