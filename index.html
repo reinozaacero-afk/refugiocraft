@@ -3,133 +3,372 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="RefugioCraft — servidor Survival Minecraft con Java + Bedrock, economía, clanes, protección, EliteMobs y minijuegos.">
+  <meta name="description" content="RefugioCraft — servidor Survival Minecraft Java + Bedrock. Aventura, economía, clanes, protección, EliteMobs y minijuegos.">
   <title>RefugioCraft | Survival Minecraft</title>
   <link rel="icon" href="assets/images/logo.png">
   <link rel="stylesheet" href="assets/css/style.css">
 
-  <!-- Mejoras visuales integradas directamente para que las imágenes funcionen
-       aunque el CSS anterior no tenga reglas específicas para ellas. -->
   <style>
     :root{
-      --rc-purple:#8b5cf6;
-      --rc-purple-dark:#4c1d95;
-      --rc-gold:#f5c451;
-      --rc-bg:#080812;
-      --rc-panel:#11111f;
-      --rc-panel-2:#17172a;
-      --rc-text:#f7f5ff;
-      --rc-muted:#b7b4c9;
-      --rc-border:rgba(255,255,255,.10);
-      --rc-shadow:0 18px 55px rgba(0,0,0,.38);
+      --rpg-bg:#07080d;
+      --rpg-bg-2:#0c0e16;
+      --rpg-panel:#10131c;
+      --rpg-panel-2:#151925;
+      --rpg-line:rgba(255,255,255,.10);
+      --rpg-line-gold:rgba(245,196,81,.32);
+      --rpg-text:#f6f3ff;
+      --rpg-muted:#b9b7c7;
+      --rpg-green:#42e77b;
+      --rpg-gold:#f5c451;
+      --rpg-purple:#9a6cff;
+      --rpg-blue:#5db8ff;
+      --rpg-shadow:0 22px 70px rgba(0,0,0,.42);
     }
 
-    body{background:var(--rc-bg);color:var(--rc-text)}
-    img{max-width:100%;display:block}
-    a{text-decoration:none}
-
-    .rc-image{
-      width:100%;height:100%;object-fit:cover;border-radius:inherit;
+    html{scroll-behavior:smooth;scroll-padding-top:88px}
+    body{
+      background:
+        radial-gradient(circle at 20% 0%,rgba(116,73,255,.10),transparent 32rem),
+        radial-gradient(circle at 90% 20%,rgba(48,218,119,.06),transparent 28rem),
+        var(--rpg-bg);
+      color:var(--rpg-text);
     }
-    .hero-art{min-height:520px;display:flex;align-items:center;justify-content:center}
+
+    .topbar{
+      position:sticky!important;top:0;z-index:1000;
+      backdrop-filter:blur(14px);
+      background:rgba(5,7,11,.90)!important;
+      border-bottom:1px solid var(--rpg-line);
+    }
+
+    .brand{display:flex;align-items:center;gap:12px}
+    .brand-mark{
+      width:42px!important;height:42px!important;
+      display:flex;align-items:center;justify-content:center;
+      overflow:hidden;border-radius:12px!important;
+      background:linear-gradient(145deg,#1a673c,#092617)!important;
+      border:1px solid rgba(66,231,123,.30);
+    }
+    .brand-mark img{width:100%;height:100%;object-fit:contain;padding:5px}
+    .brand strong span{color:var(--rpg-green)}
+
+    .nav a{transition:color .2s ease}
+    .nav a:hover{color:var(--rpg-green)!important}
+
+    .section-heading{
+      text-align:center;
+      max-width:900px;
+      margin:0 auto 34px;
+    }
+    .section-heading .eyebrow{justify-content:center}
+    .section-heading h2{margin-left:auto;margin-right:auto}
+
+    .hero{
+      min-height:calc(100vh - 72px);
+      align-items:center;
+      gap:42px;
+    }
+    .hero-content{position:relative;z-index:2}
+    .hero-content h1{letter-spacing:-.035em}
+    .hero-art{min-height:520px}
     .hero-card.main{
-      width:100%;height:100%;min-height:480px;overflow:hidden;border-radius:24px;
-      position:relative;box-shadow:var(--rc-shadow);background:#0d0d18;
+      width:100%;height:100%;min-height:480px;
+      overflow:hidden;position:relative;
+      border-radius:26px;
+      border:1px solid rgba(255,255,255,.12);
+      box-shadow:var(--rpg-shadow);
+      background:#090b11;
     }
-    .hero-card.main img{width:100%;height:100%;object-fit:cover}
+    .hero-card.main img{
+      width:100%;height:100%;object-fit:cover;
+      cursor:zoom-in;
+    }
+
+    .quick-server{
+      border-top:1px solid var(--rpg-line);
+      border-bottom:1px solid var(--rpg-line);
+      background:linear-gradient(180deg,#0c1111,#090b10);
+    }
+
+    .quick-inner{gap:14px}
+    .connection{
+      border:1px solid var(--rpg-line);
+      background:rgba(255,255,255,.035);
+      border-radius:14px;
+      transition:border-color .2s,transform .2s;
+    }
+    .connection:hover{border-color:rgba(66,231,123,.35);transform:translateY(-2px)}
+    .copy-btn{
+      cursor:pointer;
+      border:1px solid rgba(66,231,123,.35);
+      background:rgba(66,231,123,.10);
+      color:#b9ffd0;
+      border-radius:9px;
+      padding:8px 11px;
+      font-weight:800;
+    }
+
+    .feature-card,.rank-card,.glass-card{
+      border-color:var(--rpg-line)!important;
+      box-shadow:0 12px 40px rgba(0,0,0,.18);
+    }
+    .feature-card{transition:transform .2s, border-color .2s}
+    .feature-card:hover{transform:translateY(-5px);border-color:rgba(154,108,255,.45)!important}
 
     .image-panel{
-      overflow:hidden;border:1px solid var(--rc-border);border-radius:22px;
-      background:var(--rc-panel);box-shadow:var(--rc-shadow);
+      overflow:hidden;
+      border:1px solid var(--rpg-line);
+      border-radius:24px;
+      background:var(--rpg-panel);
+      box-shadow:var(--rpg-shadow);
     }
-    .image-panel img{width:100%;height:auto}
-    .image-panel .panel-copy{padding:20px}
-    .image-panel h3{margin:0 0 8px}
-    .image-panel p{margin:0;color:var(--rc-muted);line-height:1.65}
+    .image-panel img{
+      width:100%;height:auto;display:block;
+      cursor:zoom-in;
+    }
+    .panel-copy{
+      padding:20px 22px 22px;
+      text-align:center;
+    }
+    .panel-copy h3{margin:0 0 8px}
+    .panel-copy p{margin:0;color:var(--rpg-muted);line-height:1.65}
 
     .adventure-banner{
-      margin-top:30px;border-radius:24px;overflow:hidden;border:1px solid var(--rc-border);
-      box-shadow:var(--rc-shadow);background:#0d0d18;
+      margin-top:26px;
+      overflow:hidden;
+      border-radius:24px;
+      border:1px solid var(--rpg-line);
+      box-shadow:var(--rpg-shadow);
     }
-    .adventure-banner img{width:100%;height:auto}
+    .adventure-banner img{width:100%;cursor:zoom-in}
 
-    .minigames-section{margin-top:40px}
-    .minigames-hero{
-      border-radius:24px;overflow:hidden;border:1px solid var(--rc-border);
-      box-shadow:var(--rc-shadow);margin-bottom:24px;background:#0d0d18;
-    }
-    .minigames-hero img{width:100%;height:auto}
     .minigame-grid{
-      display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:18px;
     }
     .minigame-card{
-      overflow:hidden;border-radius:18px;background:var(--rc-panel);
-      border:1px solid var(--rc-border);box-shadow:0 12px 35px rgba(0,0,0,.25);
+      overflow:hidden;border:1px solid var(--rpg-line);
+      border-radius:20px;background:var(--rpg-panel);
+      box-shadow:0 14px 45px rgba(0,0,0,.25);
+      transition:transform .2s,border-color .2s;
     }
-    .minigame-card img{width:100%;aspect-ratio:16/9;object-fit:cover}
-    .minigame-card .copy{padding:15px 16px 18px}
-    .minigame-card h3{margin:0 0 5px}
-    .minigame-card p{margin:0;color:var(--rc-muted);font-size:.92rem}
+    .minigame-card:hover{transform:translateY(-5px);border-color:rgba(245,196,81,.32)}
+    .minigame-card img{
+      width:100%;aspect-ratio:16/9;object-fit:cover;cursor:zoom-in;
+    }
+    .minigame-card .copy{padding:16px 17px 19px;text-align:center}
+    .minigame-card h3{margin:0 0 6px}
+    .minigame-card p{margin:0;color:var(--rpg-muted);line-height:1.5;font-size:.92rem}
 
-    .guides-grid{
-      display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;
+    .rank-image-grid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:20px;
     }
-    .guide-card{
-      overflow:hidden;border-radius:18px;background:var(--rc-panel);
-      border:1px solid var(--rc-border);cursor:pointer;
-      transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease;
+    .rank-image-card{
+      overflow:hidden;
+      border:1px solid var(--rpg-line-gold);
+      border-radius:22px;
+      background:linear-gradient(180deg,#11141e,#0c0e15);
+      box-shadow:var(--rpg-shadow);
+      transition:transform .2s,border-color .2s;
     }
-    .guide-card:hover{transform:translateY(-4px);box-shadow:0 18px 45px rgba(0,0,0,.35);border-color:rgba(139,92,246,.55)}
-    .guide-card img{width:100%;aspect-ratio:16/10;object-fit:cover}
-    .guide-card .copy{padding:15px 16px 18px}
-    .guide-card h3{margin:0 0 5px}
-    .guide-card p{margin:0;color:var(--rc-muted);font-size:.9rem}
+    .rank-image-card:hover{transform:translateY(-5px);border-color:rgba(245,196,81,.65)}
+    .rank-image-card img{width:100%;height:auto;display:block;cursor:zoom-in}
+    .rank-image-card .caption{
+      padding:14px 16px 16px;text-align:center;
+      color:var(--rpg-muted);font-size:.92rem;
+    }
+    .rank-currency-note{
+      margin:20px auto 0;
+      max-width:900px;
+      padding:18px 22px;
+      text-align:center;
+      border:1px solid var(--rpg-line-gold);
+      border-radius:16px;
+      background:rgba(245,196,81,.055);
+      color:#e8e2d3;
+      line-height:1.65;
+    }
+    .rank-currency-note strong{color:var(--rpg-gold)}
+
+    .crate-feature{
+      max-width:1100px;margin:0 auto;
+    }
+    .crate-feature img{
+      width:100%;border-radius:24px;
+      border:1px solid var(--rpg-line-gold);
+      box-shadow:var(--rpg-shadow);
+      cursor:zoom-in;
+    }
+
+    .help-intro{
+      max-width:800px;margin:0 auto 36px;text-align:center;
+      color:var(--rpg-muted);line-height:1.7;
+    }
+    .help-category{
+      margin:0 auto 32px;
+      max-width:1200px;
+      padding:26px;
+      border:1px solid var(--rpg-line);
+      border-radius:26px;
+      background:
+        linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,.012)),
+        var(--rpg-panel);
+      box-shadow:var(--rpg-shadow);
+    }
+    .help-category-header{
+      text-align:center;
+      margin-bottom:22px;
+    }
+    .help-category-header .eyebrow{justify-content:center}
+    .help-category-header h3{font-size:1.7rem;margin:8px 0}
+    .help-category-header p{
+      max-width:760px;margin:0 auto;color:var(--rpg-muted);line-height:1.65
+    }
+    .help-images{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:18px;
+    }
+    .help-images.single{grid-template-columns:minmax(0,900px);justify-content:center}
+    .help-images.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .help-image{
+      overflow:hidden;border-radius:18px;
+      border:1px solid var(--rpg-line);
+      background:#080a10;
+    }
+    .help-image img{
+      width:100%;height:auto;display:block;cursor:zoom-in;
+    }
+
+    .help-download{
+      display:flex;justify-content:center;margin-top:22px;
+    }
+    .help-download .btn{min-width:260px}
+
+    .community-feature{
+      margin-top:28px;
+    }
+    .community-feature img{
+      width:100%;border-radius:20px;border:1px solid var(--rpg-line);cursor:zoom-in;
+    }
 
     .gallery{
-      display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;
+      display:grid!important;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:18px;
     }
     .gallery .image-slot{
-      min-height:0!important;height:auto!important;padding:0!important;overflow:hidden;
-      border-radius:18px;border:1px solid var(--rc-border);background:var(--rc-panel);
+      min-height:0!important;height:auto!important;padding:0!important;
+      overflow:hidden;border-radius:20px;
+      border:1px solid var(--rpg-line);background:var(--rpg-panel);
     }
-    .gallery .image-slot img{width:100%;height:100%;aspect-ratio:16/10;object-fit:cover}
     .gallery .image-slot.large{grid-column:span 2}
-    .gallery .image-slot.large img{aspect-ratio:16/9}
+    .gallery img{
+      width:100%;height:100%;aspect-ratio:16/10;object-fit:cover;cursor:zoom-in;
+    }
 
-    .media-section .video-placeholder{
-      position:relative;overflow:hidden;min-height:230px;
-      display:flex;flex-direction:column;align-items:center;justify-content:center;
+    .connect-modal{
+      position:fixed;inset:0;z-index:9998;
+      display:none;align-items:center;justify-content:center;
+      padding:20px;
+      background:rgba(0,0,0,.80);
+      backdrop-filter:blur(10px);
+    }
+    .connect-modal.open{display:flex}
+    .connect-dialog{
+      width:min(920px,96vw);
+      max-height:90vh;overflow:auto;
+      border:1px solid rgba(245,196,81,.30);
+      border-radius:28px;
+      background:
+        radial-gradient(circle at 50% 0%,rgba(154,108,255,.14),transparent 28rem),
+        #0b0e15;
+      box-shadow:0 35px 120px rgba(0,0,0,.65);
+      padding:30px;
+      position:relative;
+    }
+    .connect-close{
+      position:absolute;right:18px;top:18px;
+      width:42px;height:42px;border:1px solid var(--rpg-line);
+      border-radius:50%;background:rgba(255,255,255,.06);
+      color:#fff;font-size:25px;cursor:pointer;
+    }
+    .connect-title{text-align:center;padding:5px 40px 26px}
+    .connect-title .eyebrow{justify-content:center}
+    .connect-title h2{margin:8px 0}
+    .connect-title p{color:var(--rpg-muted);margin:0}
+    .connect-grid{
+      display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px
+    }
+    .connect-card{
+      border:1px solid var(--rpg-line);
+      border-radius:20px;
+      padding:24px;
+      background:rgba(255,255,255,.025);
+    }
+    .connect-card.java{border-color:rgba(66,231,123,.30)}
+    .connect-card.bedrock{border-color:rgba(91,184,255,.30)}
+    .connect-card h3{text-align:center;margin:0 0 6px}
+    .connect-card .sub{text-align:center;color:var(--rpg-muted);margin:0 0 22px}
+    .server-row{
+      display:flex;justify-content:space-between;gap:14px;
+      padding:12px 0;border-bottom:1px solid var(--rpg-line);
+    }
+    .server-row:last-of-type{border-bottom:0}
+    .server-row span{color:var(--rpg-muted)}
+    .server-row strong{word-break:break-word;text-align:right}
+    .connect-copy{
+      width:100%;margin-top:16px;padding:12px 14px;
+      border:1px solid rgba(66,231,123,.35);
+      border-radius:12px;background:rgba(66,231,123,.08);
+      color:#baffd0;font-weight:900;cursor:pointer;
+    }
+    .bedrock .connect-copy{
+      border-color:rgba(91,184,255,.35);
+      background:rgba(91,184,255,.08);color:#cceaff;
     }
 
     .lightbox{
-      position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;
-      padding:24px;background:rgba(0,0,0,.86);backdrop-filter:blur(8px);
+      position:fixed;inset:0;z-index:9999;
+      display:none;align-items:center;justify-content:center;
+      padding:20px;background:rgba(0,0,0,.90);
+      backdrop-filter:blur(8px);
     }
     .lightbox.open{display:flex}
-    .lightbox img{max-width:min(1200px,95vw);max-height:88vh;width:auto;height:auto;border-radius:14px;box-shadow:0 30px 100px #000}
+    .lightbox img{
+      max-width:96vw;max-height:90vh;width:auto;height:auto;
+      object-fit:contain;border-radius:14px;
+      box-shadow:0 35px 120px rgba(0,0,0,.8);
+    }
     .lightbox-close{
-      position:fixed;top:18px;right:22px;border:0;background:rgba(255,255,255,.12);
-      color:#fff;border-radius:50%;width:44px;height:44px;font-size:26px;cursor:pointer;
+      position:fixed;right:20px;top:18px;
+      width:46px;height:46px;border-radius:50%;
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(255,255,255,.10);color:#fff;
+      font-size:28px;cursor:pointer;z-index:2;
     }
 
-    .section-heading{scroll-margin-top:90px}
-    .rc-badge{
-      display:inline-flex;align-items:center;gap:7px;padding:7px 11px;border-radius:999px;
-      background:rgba(139,92,246,.13);border:1px solid rgba(139,92,246,.28);
-      color:#d9c8ff;font-size:.78rem;font-weight:800;letter-spacing:.08em;
-    }
+    .zoomable{cursor:zoom-in!important}
+    .toast{z-index:10001}
 
     @media(max-width:1050px){
       .minigame-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-      .guides-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .rank-image-grid{grid-template-columns:1fr}
+      .help-images.three{grid-template-columns:1fr}
     }
     @media(max-width:760px){
+      .hero{padding-top:25px}
       .hero-art{min-height:300px}
       .hero-card.main{min-height:300px}
-      .minigame-grid,.guides-grid,.gallery{grid-template-columns:1fr!important}
+      .minigame-grid,.help-images,.gallery,.connect-grid{grid-template-columns:1fr!important}
       .gallery .image-slot.large{grid-column:span 1}
-      .gallery .image-slot.large img{aspect-ratio:16/10}
-      .adventure-banner{margin-top:22px}
+      .help-category{padding:18px}
+      .connect-dialog{padding:22px}
+      .server-row{flex-direction:column;gap:5px}
+      .server-row strong{text-align:left}
     }
   </style>
 </head>
@@ -139,7 +378,9 @@
 
   <header class="topbar" id="top">
     <a class="brand" href="#inicio" aria-label="RefugioCraft inicio">
-      <div class="brand-mark">🛡️</div>
+      <div class="brand-mark">
+        <img src="assets/images/logo.png" alt="Logo de RefugioCraft">
+      </div>
       <div>
         <strong>REFUGIO<span>CRAFT</span></strong>
         <small>SURVIVAL • JAVA + BEDROCK</small>
@@ -154,7 +395,7 @@
       <a href="#minijuegos">Minijuegos</a>
       <a href="#rangos">Rangos</a>
       <a href="#cofres">Cofres</a>
-      <a href="#guias">Guías</a>
+      <a href="#ayuda">Guías</a>
       <a href="#comunidad">Comunidad</a>
     </nav>
   </header>
@@ -167,8 +408,8 @@
         <h1>Tu aventura.<br><span>Tu refugio.</span><br>Tu historia.</h1>
         <p>Construye, explora, comercia, protege tu hogar y crea una historia que sea solo tuya.</p>
         <div class="hero-actions">
-          <a class="btn btn-primary" href="#servidor">🎮 JUGAR AHORA</a>
-          <a class="btn btn-ghost" href="#guias">📚 VER GUÍAS</a>
+          <button class="btn btn-primary open-connect" type="button">🎮 JUGAR AHORA</button>
+          <a class="btn btn-ghost" href="#ayuda">📚 VER GUÍAS</a>
         </div>
         <div class="hero-server-chip">
           <span class="online-dot"></span>
@@ -178,30 +419,29 @@
 
       <div class="hero-art">
         <div class="hero-card main">
-          <img src="assets/images/hero.png" alt="RefugioCraft — aventura Survival" fetchpriority="high">
+          <img class="zoomable" src="assets/images/hero.png" alt="RefugioCraft — aventura Survival" fetchpriority="high">
         </div>
         <div class="floating-stat stat-1"><strong>26.2</strong><span>Servidor</span></div>
         <div class="floating-stat stat-2"><strong>JAVA + BEDROCK</strong><span>Crossplay</span></div>
       </div>
     </section>
 
-    <!-- CONEXIÓN -->
+    <!-- CONEXIÓN RÁPIDA -->
     <section class="quick-server" aria-label="Datos de conexión">
       <div class="quick-inner">
         <div class="quick-label">CONECTA AHORA</div>
-
         <div class="connection">
           <span class="connection-title">JAVA</span>
           <code id="javaIp">209.222.97.218:25613</code>
           <button class="copy-btn" data-copy="javaIp" type="button">COPIAR</button>
         </div>
-
         <div class="connection">
           <span class="connection-title">BEDROCK</span>
           <code id="bedrockIp">209.222.97.218</code>
           <span class="port">PUERTO 24456</span>
           <button class="copy-btn" data-copy="bedrockIp" type="button">COPIAR IP</button>
         </div>
+        <button class="btn btn-ghost open-connect" type="button">VER DATOS DE CONEXIÓN</button>
       </div>
     </section>
 
@@ -218,15 +458,15 @@
         <article class="feature-card"><div class="feature-icon">💰</div><h3>Economía</h3><p>Compra, vende, trabaja, comercia y haz crecer tu patrimonio en Refugias.</p></article>
         <article class="feature-card"><div class="feature-icon">🧭</div><h3>Exploración</h3><p>Descubre biomas, zonas especiales, warps y nuevos lugares para aventurarte.</p></article>
         <article class="feature-card"><div class="feature-icon">🎁</div><h3>Recompensas</h3><p>Cofres, eventos, llaves y premios para mantener siempre algo nuevo por conseguir.</p></article>
-        <article class="feature-card"><div class="feature-icon">⚔️</div><h3>Clanes</h3><p>Forma equipos, crea alianzas, compite y construye tu historia con otros jugadores.</p></article>
+        <article class="feature-card"><div class="feature-icon">⚔️</div><h3>Clanes</h3><p>Forma equipos, crea alianzas y construye tu historia con otros jugadores.</p></article>
         <article class="feature-card"><div class="feature-icon">✨</div><h3>Cosméticos</h3><p>Personaliza tu presencia y dale identidad a tu personaje.</p></article>
       </div>
 
       <div class="image-panel" style="margin-top:30px">
-        <img src="assets/images/fede7e83-c990-486f-b45e-5291b84b44b0.png" alt="Aventura, comunidad y sistemas de RefugioCraft" loading="lazy">
+        <img class="zoomable" src="assets/images/fede7e83-c990-486f-b45e-5291b84b44b0.png" alt="Aventura, comunidad y sistemas de RefugioCraft" loading="lazy">
         <div class="panel-copy">
-          <h3>Un servidor con sistemas para descubrir</h3>
-          <p>Aventura, comunidad y sistemas completos forman parte de la experiencia de RefugioCraft.</p>
+          <h3>Un mundo con más por descubrir</h3>
+          <p>Aventura, comunidad y sistemas diseñados para que cada jugador encuentre su propia forma de jugar.</p>
         </div>
       </div>
     </section>
@@ -235,162 +475,204 @@
     <section class="section split-section" id="aventura">
       <div>
         <div class="eyebrow">TU PROGRESO</div>
-        <h2>Empieza pequeño.<br><span>Termina con una historia.</span></h2>
+        <h2>Empieza pequeño.<br><span>Construye tu historia.</span></h2>
         <p>En RefugioCraft puedes comenzar con lo básico y avanzar a tu propio ritmo.</p>
 
         <div class="steps">
           <div class="step"><b>01</b><div><h3>Entra</h3><p>Conecta desde Java o Bedrock.</p></div></div>
-          <div class="step"><b>02</b><div><h3>Construye</h3><p>Busca un lugar y crea tu primer refugio.</p></div></div>
-          <div class="step"><b>03</b><div><h3>Progresa</h3><p>Trabaja, comercia, explora y mejora tu economía.</p></div></div>
-          <div class="step"><b>04</b><div><h3>Haz historia</h3><p>Únete a clanes, participa en eventos y deja tu huella.</p></div></div>
+          <div class="step"><b>02</b><div><h3>Construye</h3><p>Encuentra tu lugar y crea tu refugio.</p></div></div>
+          <div class="step"><b>03</b><div><h3>Progresa</h3><p>Trabaja, comercia, explora y mejora.</p></div></div>
+          <div class="step"><b>04</b><div><h3>Haz historia</h3><p>Únete a clanes, eventos y aventuras.</p></div></div>
         </div>
       </div>
 
       <div class="image-panel">
-        <img src="assets/images/baner minijuegos.png" alt="Zona de minijuegos de RefugioCraft" loading="lazy">
+        <img class="zoomable" src="assets/images/baner minijuegos.png" alt="Zona de minijuegos de RefugioCraft" loading="lazy">
         <div class="panel-copy">
-          <span class="rc-badge">MINIJUEGOS</span>
-          <h3 style="margin-top:10px">Además del Survival</h3>
-          <p>RefugioCraft también cuenta con una zona dedicada a minijuegos y experiencias competitivas.</p>
+          <h3>Más allá del Survival</h3>
+          <p>También encontrarás una zona de minijuegos para cambiar de ritmo y competir.</p>
         </div>
       </div>
     </section>
 
     <!-- MINIJUEGOS -->
-    <section class="section minigames-section" id="minijuegos">
+    <section class="section" id="minijuegos">
       <div class="section-heading">
-        <div class="eyebrow">MODO JUEGO</div>
+        <div class="eyebrow">MODOS DE JUEGO</div>
         <h2>Minijuegos</h2>
-        <p>Una sección visual para presentar los juegos disponibles y los que se incorporen al servidor.</p>
-      </div>
-
-      <div class="minigames-hero">
-        <img src="assets/images/baner minijuegos.png" alt="Entrada a los minijuegos de RefugioCraft" loading="lazy">
+        <p>Experiencias competitivas para jugar solo o con amigos.</p>
       </div>
 
       <div class="minigame-grid">
-        <article class="minigame-card">
-          <img src="assets/images/bedwars.png" alt="BedWars RefugioCraft" loading="lazy">
-          <div class="copy"><h3>BedWars</h3><p>Combate por equipos y protección de tu cama.</p></div>
-        </article>
-        <article class="minigame-card">
-          <img src="assets/images/skywars.png" alt="SkyWars RefugioCraft" loading="lazy">
-          <div class="copy"><h3>SkyWars</h3><p>Combate en islas flotantes y consigue recursos para sobrevivir.</p></div>
-        </article>
-        <article class="minigame-card">
-          <img src="assets/images/tntrun.png" alt="TNT Run RefugioCraft" loading="lazy">
-          <div class="copy"><h3>TNT Run</h3><p>Corre, evita caer y sobrevive hasta el final.</p></div>
-        </article>
-        <article class="minigame-card">
-          <img src="assets/images/juegosdelhambre.png" alt="Juegos del Hambre RefugioCraft" loading="lazy">
-          <div class="copy"><h3>Juegos del Hambre</h3><p>Combate, consigue recursos y sobrevive a los demás jugadores.</p></div>
-        </article>
+        <article class="minigame-card"><img class="zoomable" src="assets/images/bedwars.png" alt="BedWars RefugioCraft" loading="lazy"><div class="copy"><h3>BedWars</h3><p>Protege tu cama, consigue recursos y combate por la victoria.</p></div></article>
+        <article class="minigame-card"><img class="zoomable" src="assets/images/skywars.png" alt="SkyWars RefugioCraft" loading="lazy"><div class="copy"><h3>SkyWars</h3><p>Equípate en islas flotantes y sobrevive al combate.</p></div></article>
+        <article class="minigame-card"><img class="zoomable" src="assets/images/tntrun.png" alt="TNT Run RefugioCraft" loading="lazy"><div class="copy"><h3>TNT Run</h3><p>Corre sin parar y evita caer mientras el suelo desaparece.</p></div></article>
+        <article class="minigame-card"><img class="zoomable" src="assets/images/juegosdelhambre.png" alt="Juegos del Hambre RefugioCraft" loading="lazy"><div class="copy"><h3>Juegos del Hambre</h3><p>Consigue recursos, combate y sobrevive hasta el final.</p></div></article>
       </div>
     </section>
 
-    <!-- RANGOS -->
+    <!-- RANGOS: SOLO IMÁGENES -->
     <section class="section dark-panel" id="rangos">
       <div class="section-heading">
-        <div class="eyebrow">APOYA AL SERVIDOR</div>
-        <h2>Rangos permanentes</h2>
-        <p>Una sola compra. Beneficios permanentes y recompensas dentro del servidor.</p>
+        <div class="eyebrow">RANGOS Y ECONOMÍA</div>
+        <h2>Rangos de RefugioCraft</h2>
+        <p>Consulta los precios, beneficios y el sistema de compra de Refugias directamente en las guías visuales.</p>
       </div>
 
-      <div class="rank-grid">
-        <article class="rank-card star">
-          <div class="rank-top"><span class="rank-badge">⭐</span><div><h3>ESTRELLA</h3><small>$9.900 COP</small></div></div>
-          <div class="price-line">450.000 <span>Refugias al comprar</span></div>
-          <ul>
-            <li>8 homes</li><li>10 regiones DGClaims</li><li>2 Jobs</li><li>Prefijo y color especial</li>
-            <li>Cosméticos básicos</li><li>/nick • /hat • /craft</li><li>Kit inicial</li>
-            <li>80.000 Refugias cada semana</li><li>2 Comunes + 1 Rara semanal</li>
-          </ul>
+      <div class="rank-image-grid">
+        <article class="rank-image-card">
+          <img class="zoomable" src="assets/images/rangos_1.jpeg" alt="Precios de los rangos de RefugioCraft" loading="lazy">
+          <div class="caption">Precios y paquetes de rangos.</div>
         </article>
-
-        <article class="rank-card veteran featured">
-          <div class="popular">MÁS VENDIDO</div>
-          <div class="rank-top"><span class="rank-badge">🔷</span><div><h3>VETERANO</h3><small>$19.900 COP</small></div></div>
-          <div class="price-line">900.000 <span>Refugias al comprar</span></div>
-          <ul>
-            <li>12 homes</li><li>20 regiones DGClaims</li><li>3 Jobs</li><li>Prefijo y chat especial</li>
-            <li>Cosméticos avanzados</li><li>/nick • /hat • /craft</li><li>Kit inicial mejorado</li>
-            <li>150.000 Refugias cada semana</li><li>500.000 Refugias cada mes</li>
-            <li>3 Comunes + 1 Rara + 1 Épica semanal</li><li>1 Legendaria mensual</li>
-          </ul>
+        <article class="rank-image-card">
+          <img class="zoomable" src="assets/images/rangos_2.jpeg" alt="Beneficios de los rangos de RefugioCraft" loading="lazy">
+          <div class="caption">Beneficios y características de cada rango.</div>
         </article>
-
-        <article class="rank-card vip">
-          <div class="rank-top"><span class="rank-badge">💜</span><div><h3>VIP</h3><small>$34.900 COP</small></div></div>
-          <div class="price-line">1.500.000 <span>Refugias al comprar</span></div>
-          <ul>
-            <li>16 homes</li><li>30 regiones DGClaims</li><li>4 Jobs</li><li>Prefijo y chat VIP</li>
-            <li>Cosméticos premium</li><li>/nick • /hat • /craft</li><li>Kit inicial premium</li>
-            <li>250.000 Refugias cada semana</li><li>1.000.000 Refugias cada mes</li>
-            <li>4 Comunes + 2 Raras + 1 Épica semanal</li><li>1 Legendaria mensual</li>
-          </ul>
+        <article class="rank-image-card">
+          <img class="zoomable" src="assets/images/refugias_dinero_virtual.jpeg" alt="Sistema de compra de Refugias y moneda virtual" loading="lazy">
+          <div class="caption">Compra de Refugias y explicación de la moneda virtual.</div>
         </article>
       </div>
 
-      <div class="note-box">🟣 <strong>Mítica no se vende como rango.</strong> Es la recompensa máxima reservada para eventos, torneos, concursos y premios especiales.</div>
+      <div class="rank-currency-note">
+        <strong>Importante:</strong> los valores monetarios mostrados en las guías corresponden a <strong>pesos colombianos (COP)</strong>.
+        <br>
+        <strong>Refugias</strong> es la moneda virtual utilizada dentro del servidor y no representa pesos colombianos.
+      </div>
     </section>
 
-    <!-- COFRES -->
+    <!-- COFRES: IMAGEN, SIN TARJETAS DE TEXTO -->
     <section class="section" id="cofres">
       <div class="section-heading">
         <div class="eyebrow">RECOMPENSAS</div>
-        <h2>Los cofres de RefugioCraft</h2>
-        <p>Presentación visual para mostrar las recompensas de cada cofre.</p>
+        <h2>Cajas mágicas</h2>
+        <p>Consulta toda la información directamente en la guía visual.</p>
       </div>
 
-      <div class="image-panel" style="margin-bottom:24px">
-        <img src="assets/images/cajasmagicas.png" alt="Cajas mágicas de RefugioCraft" loading="lazy">
-        <div class="panel-copy"><h3>Cajas mágicas</h3><p>Recompensas, llaves y objetos para acompañar tu progreso.</p></div>
-      </div>
-
-      <div class="crate-grid">
-        <article class="crate-card common"><div class="crate-icon">🟢</div><h3>COMÚN</h3><p>Recursos básicos, comida, hierro, redstone, diamantes y Refugias.</p><span>VER RECOMPENSAS</span></article>
-        <article class="crate-card rare"><div class="crate-icon">🔵</div><h3>RARO</h3><p>Herramientas de diamante, recursos, experiencia, cuarzo, oro y pociones.</p><span>VER RECOMPENSAS</span></article>
-        <article class="crate-card epic"><div class="crate-icon">🟣</div><h3>ÉPICO</h3><p>Equipo de diamante, Poder V, recursos, pociones, Mending y experiencia.</p><span>VER RECOMPENSAS</span></article>
-        <article class="crate-card legendary"><div class="crate-icon">🟠</div><h3>LEGENDARIO</h3><p>Equipo encantado, diamantes, oro, pociones, XP y manzanas doradas encantadas.</p><span>VER RECOMPENSAS</span></article>
-        <article class="crate-card mythic"><div class="crate-icon">🔴</div><h3>MÍTICO</h3><p>Elytra, netherita, tótems y equipo encantado. Exclusivo de eventos.</p><span>SOLO EVENTOS</span></article>
+      <div class="crate-feature">
+        <img class="zoomable" src="assets/images/cajasmagicas.png" alt="Guía completa de cajas mágicas de RefugioCraft" loading="lazy">
       </div>
     </section>
 
-    <!-- GUÍAS -->
-    <section class="section media-section" id="guias">
+    <!-- GUÍAS / AYUDA POR SISTEMAS -->
+    <section class="section" id="ayuda">
       <div class="section-heading">
         <div class="eyebrow">CENTRO DE AYUDA</div>
         <h2>Guías de RefugioCraft</h2>
-        <p>Consulta visualmente los principales sistemas del servidor. Haz clic en una guía para verla en grande.</p>
+        <p class="help-intro">Cada sistema tiene su propio espacio para que puedas consultar la información sin mezclar instrucciones. Haz clic en cualquier imagen para verla en pantalla completa.</p>
       </div>
 
-      <div class="guides-grid">
-        <article class="guide-card"><img src="assets/images/bloque_de_proteccion1.jpeg" alt="Guía de bloques de protección — parte 1" loading="lazy"><div class="copy"><h3>Bloques de protección · 1</h3><p>Guía visual del sistema de protección.</p></div></article>
-        <article class="guide-card"><img src="assets/images/bloque_de_proteccion2.jpeg" alt="Guía de bloques de protección — parte 2" loading="lazy"><div class="copy"><h3>Bloques de protección · 2</h3><p>Continuación de la guía de protección.</p></div></article>
+      <section class="help-category" id="guia-proteccion">
+        <div class="help-category-header">
+          <div class="eyebrow">PROTECCIÓN</div>
+          <h3>Protege tu refugio</h3>
+          <p>Aprende a utilizar los bloques de protección y a mantener tus construcciones seguras.</p>
+        </div>
+        <div class="help-images">
+          <div class="help-image"><img class="zoomable" src="assets/images/bloque_de_proteccion1.jpeg" alt="Guía de bloques de protección — parte 1" loading="lazy"></div>
+          <div class="help-image"><img class="zoomable" src="assets/images/bloque_de_proteccion2.jpeg" alt="Guía de bloques de protección — parte 2" loading="lazy"></div>
+        </div>
+      </section>
 
-        <article class="guide-card"><img src="assets/images/guia_de_tienda.jpeg" alt="Guía de tienda" loading="lazy"><div class="copy"><h3>Tienda</h3><p>Guía visual del sistema de tienda.</p></div></article>
+      <section class="help-category" id="guia-tienda">
+        <div class="help-category-header">
+          <div class="eyebrow">ECONOMÍA</div>
+          <h3>Tienda</h3>
+          <p>Aprende a consultar artículos, comprar y vender dentro de la tienda del servidor.</p>
+        </div>
+        <div class="help-images single">
+          <div class="help-image"><img class="zoomable" src="assets/images/guia_de_tienda.jpeg" alt="Guía de la tienda de RefugioCraft" loading="lazy"></div>
+        </div>
+      </section>
 
-        <article class="guide-card"><img src="assets/images/mercado_de_jugadores_1.jpeg" alt="Mercado de jugadores — parte 1" loading="lazy"><div class="copy"><h3>Mercado de jugadores · 1</h3><p>Compra y venta entre jugadores.</p></div></article>
-        <article class="guide-card"><img src="assets/images/mercado_de_jugadores_2.jpeg" alt="Mercado de jugadores — parte 2" loading="lazy"><div class="copy"><h3>Mercado de jugadores · 2</h3><p>Continuación del mercado.</p></div></article>
-        <article class="guide-card"><img src="assets/images/mercado_de_jugadores_3.jpeg" alt="Mercado de jugadores — parte 3" loading="lazy"><div class="copy"><h3>Mercado de jugadores · 3</h3><p>Continuación del mercado.</p></div></article>
+      <section class="help-category" id="guia-mercado">
+        <div class="help-category-header">
+          <div class="eyebrow">ECONOMÍA ENTRE JUGADORES</div>
+          <h3>Mercado de jugadores</h3>
+          <p>Publica, busca y gestiona artículos mediante el mercado creado para el comercio entre jugadores.</p>
+        </div>
+        <div class="help-images three">
+          <div class="help-image"><img class="zoomable" src="assets/images/mercado_de_jugadores_1.jpeg" alt="Mercado de jugadores — parte 1" loading="lazy"></div>
+          <div class="help-image"><img class="zoomable" src="assets/images/mercado_de_jugadores_2.jpeg" alt="Mercado de jugadores — parte 2" loading="lazy"></div>
+          <div class="help-image"><img class="zoomable" src="assets/images/mercado_de_jugadores_3.jpeg" alt="Mercado de jugadores — parte 3" loading="lazy"></div>
+        </div>
+      </section>
 
-        <article class="guide-card"><img src="assets/images/sistema_de_casas.jpeg" alt="Sistema de casas" loading="lazy"><div class="copy"><h3>Sistema de casas</h3><p>Guía visual de las casas y teletransporte.</p></div></article>
+      <section class="help-category" id="guia-casas">
+        <div class="help-category-header">
+          <div class="eyebrow">MOVILIDAD</div>
+          <h3>Sistema de casas</h3>
+          <p>Consulta la guía para entender cómo funcionan tus casas y sus opciones de teletransporte.</p>
+        </div>
+        <div class="help-images single">
+          <div class="help-image"><img class="zoomable" src="assets/images/sistema_de_casas.jpeg" alt="Guía del sistema de casas" loading="lazy"></div>
+        </div>
+      </section>
 
-        <article class="guide-card"><img src="assets/images/sistema_de_clanes1.jpeg" alt="Sistema de clanes — parte 1" loading="lazy"><div class="copy"><h3>Clanes · 1</h3><p>Creación y funcionamiento de clanes.</p></div></article>
-        <article class="guide-card"><img src="assets/images/sistema_de_clanes2.jpeg" alt="Sistema de clanes — parte 2" loading="lazy"><div class="copy"><h3>Clanes · 2</h3><p>Funciones y herramientas de clanes.</p></div></article>
-        <article class="guide-card"><img src="assets/images/sistema_de_clanes3.jpeg" alt="Sistema de clanes — parte 3" loading="lazy"><div class="copy"><h3>Clanes · 3</h3><p>Más funciones del sistema de clanes.</p></div></article>
+      <section class="help-category" id="guia-clanes">
+        <div class="help-category-header">
+          <div class="eyebrow">COMUNIDAD</div>
+          <h3>Sistema de clanes</h3>
+          <p>Forma tu grupo, organiza a tus compañeros y descubre las herramientas disponibles para tu clan.</p>
+        </div>
+        <div class="help-images three">
+          <div class="help-image"><img class="zoomable" src="assets/images/sistema_de_clanes1.jpeg" alt="Sistema de clanes — parte 1" loading="lazy"></div>
+          <div class="help-image"><img class="zoomable" src="assets/images/sistema_de_clanes2.jpeg" alt="Sistema de clanes — parte 2" loading="lazy"></div>
+          <div class="help-image"><img class="zoomable" src="assets/images/sistema_de_clanes3.jpeg" alt="Sistema de clanes — parte 3" loading="lazy"></div>
+        </div>
+      </section>
 
-        <article class="guide-card"><img src="assets/images/sistema_de_elite1.jpeg" alt="EliteMobs — página 1" loading="lazy"><div class="copy"><h3>EliteMobs · 1</h3><p>Guía de aventura EliteMobs.</p></div></article>
-        <article class="guide-card"><img src="assets/images/sistema_de_elite2.jpeg" alt="EliteMobs — página 2" loading="lazy"><div class="copy"><h3>EliteMobs · 2</h3><p>Combate y progresión.</p></div></article>
-        <article class="guide-card"><img src="assets/images/sistema_de_elite3.jpeg" alt="EliteMobs — página 3" loading="lazy"><div class="copy"><h3>EliteMobs · 3</h3><p>Economía Elite Coins.</p></div></article>
-        <article class="guide-card"><img src="assets/images/sistema_de_elite4.jpeg" alt="EliteMobs — página 4" loading="lazy"><div class="copy"><h3>EliteMobs · 4</h3><p>Objetos, mejoras y encantamientos.</p></div></article>
-        <article class="guide-card"><img src="assets/images/sistema_de_elite5.jpeg" alt="EliteMobs — página 5" loading="lazy"><div class="copy"><h3>EliteMobs · 5</h3><p>Mazmorras y cofres.</p></div></article>
-        <article class="guide-card"><img src="assets/images/sistema_de_elite6.jpeg" alt="EliteMobs — página 6" loading="lazy"><div class="copy"><h3>EliteMobs · 6</h3><p>Misiones, eventos y contenido avanzado.</p></div></article>
+      <section class="help-category" id="guia-elitemobs">
+        <div class="help-category-header">
+          <div class="eyebrow">AVENTURA RPG</div>
+          <h3>EliteMobs</h3>
+          <p>Una guía completa para entender el combate, la progresión, la economía, los objetos, las mazmorras, las misiones y los eventos.</p>
+        </div>
+        <div class="help-images three">
+          <div class="help-image"><img class="zoomable" src="assets/images/sistema_de_elite1.jpeg" alt="EliteMobs — guía 1" loading="lazy"></div>
+          <div class="help-image"><img class="zoomable" src="assets/images/sistema_de_elite2.jpeg" alt="EliteMobs — guía 2" loading="lazy"></div>
+          <div class="help-image"><img class="zoomable" src="assets/images/sistema_de_elite3.jpeg" alt="EliteMobs — guía 3" loading="lazy"></div>
+          <div class="help-image"><img class="zoomable" src="assets/images/sistema_de_elite4.jpeg" alt="EliteMobs — guía 4" loading="lazy"></div>
+          <div class="help-image"><img class="zoomable" src="assets/images/sistema_de_elite5.jpeg" alt="EliteMobs — guía 5" loading="lazy"></div>
+          <div class="help-image"><img class="zoomable" src="assets/images/sistema_de_elite6.jpeg" alt="EliteMobs — guía 6" loading="lazy"></div>
+        </div>
+      </section>
 
-        <article class="guide-card"><img src="assets/images/sistema_de_teletransporte.jpeg" alt="Sistema de teletransporte" loading="lazy"><div class="copy"><h3>Teletransporte</h3><p>Guía visual del sistema de viajes.</p></div></article>
-        <article class="guide-card"><img src="assets/images/sistema_de_trabajo.jpeg" alt="Sistema de trabajo" loading="lazy"><div class="copy"><h3>Trabajos</h3><p>Guía visual del sistema de Jobs.</p></div></article>
-        <article class="guide-card"><img src="assets/images/uso_vcmc_chat_de_voz.jpeg" alt="VCMC chat de voz" loading="lazy"><div class="copy"><h3>Chat de voz VCMC</h3><p>Guía visual para usar el chat de voz.</p></div></article>
-      </div>
+      <section class="help-category" id="guia-teletransporte">
+        <div class="help-category-header">
+          <div class="eyebrow">MOVILIDAD</div>
+          <h3>Teletransporte</h3>
+          <p>Aprende a desplazarte por los diferentes lugares y sistemas de viaje del servidor.</p>
+        </div>
+        <div class="help-images single">
+          <div class="help-image"><img class="zoomable" src="assets/images/sistema_de_teletransporte.jpeg" alt="Guía del sistema de teletransporte" loading="lazy"></div>
+        </div>
+      </section>
+
+      <section class="help-category" id="guia-trabajos">
+        <div class="help-category-header">
+          <div class="eyebrow">PROGRESIÓN</div>
+          <h3>Trabajos</h3>
+          <p>Conoce el sistema de Jobs y cómo utilizarlo para progresar mientras realizas actividades dentro del servidor.</p>
+        </div>
+        <div class="help-images single">
+          <div class="help-image"><img class="zoomable" src="assets/images/sistema_de_trabajo.jpeg" alt="Guía del sistema de trabajos" loading="lazy"></div>
+        </div>
+      </section>
+
+      <section class="help-category" id="guia-vcmc">
+        <div class="help-category-header">
+          <div class="eyebrow">COMUNICACIÓN</div>
+          <h3>Chat de voz VCMC</h3>
+          <p>Comunícate por voz mientras juegas desde Java o Bedrock utilizando la aplicación de VCMC.</p>
+        </div>
+        <div class="help-images single">
+          <div class="help-image"><img class="zoomable" src="assets/images/uso_vcmc_chat_de_voz.jpeg" alt="Guía de uso del chat de voz VCMC" loading="lazy"></div>
+        </div>
+        <div class="help-download">
+          <a class="btn btn-primary" href="https://antoic.com/app.html" target="_blank" rel="noopener noreferrer">🎙️ DESCARGAR APLICACIÓN VCMC</a>
+        </div>
+      </section>
     </section>
 
     <!-- GALERÍA -->
@@ -398,16 +680,16 @@
       <div class="section-heading">
         <div class="eyebrow">VIVE REFUGIOCRAFT</div>
         <h2>Galería</h2>
-        <p>Imágenes destacadas del servidor y sus sistemas.</p>
+        <p>Una mirada rápida a la aventura, la comunidad y los minijuegos.</p>
       </div>
 
       <div class="gallery">
-        <div class="image-slot large"><img src="assets/images/hero.png" alt="RefugioCraft — portada" loading="lazy"></div>
-        <div class="image-slot"><img src="assets/images/comunidad.png" alt="Comunidad RefugioCraft" loading="lazy"></div>
-        <div class="image-slot"><img src="assets/images/bedwars.png" alt="BedWars" loading="lazy"></div>
-        <div class="image-slot"><img src="assets/images/skywars.png" alt="SkyWars" loading="lazy"></div>
-        <div class="image-slot"><img src="assets/images/tntrun.png" alt="TNT Run" loading="lazy"></div>
-        <div class="image-slot"><img src="assets/images/juegosdelhambre.png" alt="Juegos del Hambre" loading="lazy"></div>
+        <div class="image-slot large"><img class="zoomable" src="assets/images/hero.png" alt="RefugioCraft — portada" loading="lazy"></div>
+        <div class="image-slot"><img class="zoomable" src="assets/images/comunidad.png" alt="Comunidad RefugioCraft" loading="lazy"></div>
+        <div class="image-slot"><img class="zoomable" src="assets/images/bedwars.png" alt="BedWars" loading="lazy"></div>
+        <div class="image-slot"><img class="zoomable" src="assets/images/skywars.png" alt="SkyWars" loading="lazy"></div>
+        <div class="image-slot"><img class="zoomable" src="assets/images/tntrun.png" alt="TNT Run" loading="lazy"></div>
+        <div class="image-slot"><img class="zoomable" src="assets/images/juegosdelhambre.png" alt="Juegos del Hambre" loading="lazy"></div>
       </div>
     </section>
 
@@ -418,21 +700,26 @@
         <h2>Un servidor hecho para quedarse</h2>
         <p>Clanes, eventos, economía, exploración y una comunidad donde cada jugador puede crear su propio refugio.</p>
         <div class="community-buttons">
-          <a class="btn btn-primary" href="#servidor">💬 COMUNIDAD</a>
-          <a class="btn btn-ghost" href="#guias">📚 GUÍAS</a>
+          <button class="btn btn-primary open-connect" type="button">🎮 ENTRAR AL SERVIDOR</button>
+          <a class="btn btn-ghost" href="#ayuda">📚 CENTRO DE AYUDA</a>
         </div>
       </div>
 
       <div class="glass-card">
-        <div class="eyebrow">REGLAS Y AYUDA</div>
-        <h2>Todo en un solo sitio</h2>
+        <div class="eyebrow">GUÍAS RÁPIDAS</div>
+        <h2>Encuentra lo que necesitas</h2>
         <div class="link-list">
-          <a href="#servidor">📜 Información del servidor <span>→</span></a>
-          <a href="#guias">📘 Centro de guías <span>→</span></a>
-          <a href="#cofres">🎁 Recompensas de cofres <span>→</span></a>
-          <a href="#rangos">💎 Beneficios de rangos <span>→</span></a>
-          <a href="#minijuegos">🎮 Minijuegos <span>→</span></a>
+          <a href="#guia-proteccion">🛡️ Proteger mi terreno <span>→</span></a>
+          <a href="#guia-tienda">🛒 Usar la tienda <span>→</span></a>
+          <a href="#guia-mercado">💰 Mercado de jugadores <span>→</span></a>
+          <a href="#guia-clanes">⚔️ Crear y gestionar un clan <span>→</span></a>
+          <a href="#guia-elitemobs">👹 Empezar con EliteMobs <span>→</span></a>
+          <a href="#guia-vcmc">🎙️ Configurar chat de voz <span>→</span></a>
         </div>
+      </div>
+
+      <div class="community-feature" style="grid-column:1/-1">
+        <img class="zoomable" src="assets/images/comunidad.png" alt="Comunidad de RefugioCraft" loading="lazy">
       </div>
     </section>
 
@@ -441,10 +728,10 @@
       <div class="cta-card">
         <div class="eyebrow">TU HISTORIA COMIENZA AQUÍ</div>
         <h2>¿Listo para construir<br><span>tu refugio?</span></h2>
-        <p>Conéctate desde Java o Bedrock y entra a la comunidad de RefugioCraft.</p>
+        <p>Conéctate desde Java o Bedrock y comienza tu aventura.</p>
         <div class="hero-actions">
-          <a class="btn btn-primary" href="#servidor">🎮 JUGAR AHORA</a>
-          <button class="btn btn-ghost" id="copyJavaBottom" type="button">📋 COPIAR IP JAVA</button>
+          <button class="btn btn-primary open-connect" type="button">🎮 JUGAR AHORA</button>
+          <a class="btn btn-ghost" href="#ayuda">📚 VER GUÍAS</a>
         </div>
       </div>
     </section>
@@ -460,129 +747,196 @@
       <a href="#minijuegos">Minijuegos</a>
       <a href="#rangos">Rangos</a>
       <a href="#cofres">Cofres</a>
-      <a href="#guias">Guías</a>
+      <a href="#ayuda">Guías</a>
     </div>
     <div>© 2026 RefugioCraft</div>
   </footer>
 
-  <div id="toast" class="toast" role="status" aria-live="polite">IP copiada correctamente</div>
+  <!-- VENTANA DE CONEXIÓN -->
+  <div class="connect-modal" id="connectModal" aria-hidden="true">
+    <div class="connect-dialog" role="dialog" aria-modal="true" aria-labelledby="connectTitle">
+      <button class="connect-close" id="connectClose" type="button" aria-label="Cerrar">×</button>
 
-  <!-- Visor de imágenes de las guías -->
+      <div class="connect-title">
+        <div class="eyebrow">CÓMO ENTRAR</div>
+        <h2 id="connectTitle">Conecta a RefugioCraft</h2>
+        <p>Elige tu edición y copia los datos directamente desde aquí.</p>
+      </div>
+
+      <div class="connect-grid">
+        <article class="connect-card java">
+          <h3>☕ JAVA EDITION</h3>
+          <p class="sub">Para Minecraft Java Edition</p>
+          <div class="server-row"><span>Nombre</span><strong>RefugioCraft</strong></div>
+          <div class="server-row"><span>Dirección</span><strong>209.222.97.218:25613</strong></div>
+          <div class="server-row"><span>Versión</span><strong>26.2</strong></div>
+          <button class="connect-copy" type="button" data-value="209.222.97.218:25613">📋 COPIAR DIRECCIÓN JAVA</button>
+        </article>
+
+        <article class="connect-card bedrock">
+          <h3>📱 BEDROCK EDITION</h3>
+          <p class="sub">Para celular, Windows y dispositivos Bedrock</p>
+          <div class="server-row"><span>Nombre</span><strong>RefugioCraft</strong></div>
+          <div class="server-row"><span>Dirección</span><strong>209.222.97.218</strong></div>
+          <div class="server-row"><span>Puerto</span><strong>24456</strong></div>
+          <button class="connect-copy" type="button" data-value="209.222.97.218">📋 COPIAR IP BEDROCK</button>
+          <button class="connect-copy" type="button" data-value="24456">📋 COPIAR PUERTO</button>
+        </article>
+      </div>
+    </div>
+  </div>
+
+  <!-- VISOR UNIVERSAL DE IMÁGENES -->
   <div class="lightbox" id="lightbox" aria-hidden="true">
-    <button class="lightbox-close" id="lightboxClose" type="button" aria-label="Cerrar">×</button>
+    <button class="lightbox-close" id="lightboxClose" type="button" aria-label="Cerrar imagen">×</button>
     <img id="lightboxImage" src="" alt="">
   </div>
 
-  <!-- Se mantiene el JS original del proyecto si existe -->
+  <div id="toast" class="toast" role="status" aria-live="polite">Copiado correctamente</div>
+
   <script src="assets/js/app.js"></script>
 
-  <!-- Funciones adicionales independientes y seguras -->
   <script>
-    (function () {
+    (function(){
       "use strict";
 
-      function showToast(message) {
-        var toast = document.getElementById("toast");
-        if (!toast) return;
-        toast.textContent = message;
+      function showToast(message){
+        var toast=document.getElementById("toast");
+        if(!toast) return;
+        toast.textContent=message;
         toast.classList.add("show");
-        window.clearTimeout(window.__rcToastTimer);
-        window.__rcToastTimer = window.setTimeout(function () {
+        clearTimeout(window.__rcToastTimer);
+        window.__rcToastTimer=setTimeout(function(){
           toast.classList.remove("show");
-        }, 2200);
+        },2200);
       }
 
-      function copyText(text, successMessage) {
-        if (!text) return;
-        if (navigator.clipboard && window.isSecureContext) {
-          navigator.clipboard.writeText(text).then(function () {
-            showToast(successMessage || "Copiado correctamente");
-          }).catch(function () {
-            fallbackCopy(text, successMessage);
-          });
-        } else {
-          fallbackCopy(text, successMessage);
-        }
-      }
-
-      function fallbackCopy(text, successMessage) {
-        var area = document.createElement("textarea");
-        area.value = text;
-        area.setAttribute("readonly", "");
-        area.style.position = "fixed";
-        area.style.opacity = "0";
+      function fallbackCopy(text,message){
+        var area=document.createElement("textarea");
+        area.value=text;
+        area.setAttribute("readonly","");
+        area.style.position="fixed";
+        area.style.left="-9999px";
         document.body.appendChild(area);
         area.select();
-        try {
+        try{
           document.execCommand("copy");
-          showToast(successMessage || "Copiado correctamente");
-        } catch (e) {
+          showToast(message||"Copiado correctamente");
+        }catch(e){
           showToast("No se pudo copiar automáticamente");
         }
         document.body.removeChild(area);
       }
 
-      document.querySelectorAll(".copy-btn").forEach(function (button) {
-        button.addEventListener("click", function () {
-          var id = button.getAttribute("data-copy");
-          var target = id ? document.getElementById(id) : null;
-          copyText(target ? target.textContent.trim() : "", "IP copiada correctamente");
+      function copyText(text,message){
+        if(!text) return;
+        if(navigator.clipboard && window.isSecureContext){
+          navigator.clipboard.writeText(text).then(function(){
+            showToast(message||"Copiado correctamente");
+          }).catch(function(){
+            fallbackCopy(text,message);
+          });
+        }else{
+          fallbackCopy(text,message);
+        }
+      }
+
+      document.querySelectorAll("[data-copy]").forEach(function(button){
+        button.addEventListener("click",function(){
+          var id=button.getAttribute("data-copy");
+          var target=document.getElementById(id);
+          copyText(target ? target.textContent.trim() : "", "Copiado correctamente");
         });
       });
 
-      var bottomCopy = document.getElementById("copyJavaBottom");
-      if (bottomCopy) {
-        bottomCopy.addEventListener("click", function () {
-          var java = document.getElementById("javaIp");
-          copyText(java ? java.textContent.trim() : "", "IP Java copiada correctamente");
+      document.querySelectorAll(".connect-copy").forEach(function(button){
+        button.addEventListener("click",function(){
+          copyText(button.getAttribute("data-value"),"Dato copiado correctamente");
+        });
+      });
+
+      /* Modal de conexión */
+      var connectModal=document.getElementById("connectModal");
+      var connectClose=document.getElementById("connectClose");
+
+      function openConnect(){
+        if(!connectModal) return;
+        connectModal.classList.add("open");
+        connectModal.setAttribute("aria-hidden","false");
+        document.body.style.overflow="hidden";
+      }
+
+      function closeConnect(){
+        if(!connectModal) return;
+        connectModal.classList.remove("open");
+        connectModal.setAttribute("aria-hidden","true");
+        document.body.style.overflow="";
+      }
+
+      document.querySelectorAll(".open-connect").forEach(function(button){
+        button.addEventListener("click",openConnect);
+      });
+
+      if(connectClose) connectClose.addEventListener("click",closeConnect);
+      if(connectModal){
+        connectModal.addEventListener("click",function(event){
+          if(event.target===connectModal) closeConnect();
         });
       }
 
-      var lightbox = document.getElementById("lightbox");
-      var lightboxImage = document.getElementById("lightboxImage");
-      var lightboxClose = document.getElementById("lightboxClose");
+      /* Visor universal: todas las imágenes con .zoomable se pueden abrir */
+      var lightbox=document.getElementById("lightbox");
+      var lightboxImage=document.getElementById("lightboxImage");
+      var lightboxClose=document.getElementById("lightboxClose");
 
-      document.querySelectorAll(".guide-card img").forEach(function (image) {
-        image.addEventListener("click", function () {
-          if (!lightbox || !lightboxImage) return;
-          lightboxImage.src = image.src;
-          lightboxImage.alt = image.alt || "Guía RefugioCraft";
+      document.querySelectorAll("img.zoomable").forEach(function(image){
+        image.addEventListener("click",function(){
+          if(!lightbox || !lightboxImage) return;
+          lightboxImage.src=image.currentSrc || image.src;
+          lightboxImage.alt=image.alt || "Imagen de RefugioCraft";
           lightbox.classList.add("open");
-          lightbox.setAttribute("aria-hidden", "false");
+          lightbox.setAttribute("aria-hidden","false");
+          document.body.style.overflow="hidden";
         });
       });
 
-      function closeLightbox() {
-        if (!lightbox || !lightboxImage) return;
+      function closeLightbox(){
+        if(!lightbox || !lightboxImage) return;
         lightbox.classList.remove("open");
-        lightbox.setAttribute("aria-hidden", "true");
-        lightboxImage.src = "";
+        lightbox.setAttribute("aria-hidden","true");
+        lightboxImage.src="";
+        document.body.style.overflow="";
       }
 
-      if (lightboxClose) lightboxClose.addEventListener("click", closeLightbox);
-      if (lightbox) {
-        lightbox.addEventListener("click", function (event) {
-          if (event.target === lightbox) closeLightbox();
+      if(lightboxClose) lightboxClose.addEventListener("click",closeLightbox);
+      if(lightbox){
+        lightbox.addEventListener("click",function(event){
+          if(event.target===lightbox) closeLightbox();
         });
       }
 
-      document.addEventListener("keydown", function (event) {
-        if (event.key === "Escape") closeLightbox();
-      });
-
-      var navToggle = document.querySelector(".nav-toggle");
-      var nav = document.querySelector(".nav");
-      if (navToggle && nav) {
-        navToggle.addEventListener("click", function () {
+      /* Menú móvil */
+      var navToggle=document.querySelector(".nav-toggle");
+      var nav=document.querySelector(".nav");
+      if(navToggle && nav){
+        navToggle.addEventListener("click",function(){
           nav.classList.toggle("open");
         });
-        nav.querySelectorAll("a").forEach(function (link) {
-          link.addEventListener("click", function () {
+        nav.querySelectorAll("a").forEach(function(link){
+          link.addEventListener("click",function(){
             nav.classList.remove("open");
           });
         });
       }
+
+      document.addEventListener("keydown",function(event){
+        if(event.key==="Escape"){
+          closeConnect();
+          closeLightbox();
+        }
+      });
     })();
   </script>
 </body>
 </html>
+
