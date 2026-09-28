@@ -354,6 +354,22 @@
     .zoomable{cursor:zoom-in!important}
     .toast{z-index:10001}
 
+
+    /* ===== COMUNIDAD Y CREADORES ===== */
+    .community-hub{margin-top:28px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+    .community-hub-card{position:relative;overflow:hidden;padding:24px;border:1px solid var(--rpg-line);border-radius:22px;background:radial-gradient(circle at 100% 0%,rgba(154,108,255,.13),transparent 15rem),linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.012)),var(--rpg-panel);box-shadow:var(--rpg-shadow);transition:transform .2s,border-color .2s,box-shadow .2s}
+    .community-hub-card:hover{transform:translateY(-5px);border-color:rgba(93,184,255,.40);box-shadow:0 20px 65px rgba(0,0,0,.38)}
+    .community-hub-icon{width:52px;height:52px;display:flex;align-items:center;justify-content:center;border-radius:16px;margin-bottom:16px;font-size:1.55rem;background:rgba(255,255,255,.055);border:1px solid var(--rpg-line)}
+    .community-hub-card h3{margin:0 0 8px}.community-hub-card p{margin:0 0 18px;color:var(--rpg-muted);line-height:1.6}.community-hub-card .btn{width:100%;justify-content:center}
+    .community-hub-card.discord{border-color:rgba(154,108,255,.25)}.community-hub-card.whatsapp{border-color:rgba(66,231,123,.25)}.community-hub-card.store{border-color:rgba(245,196,81,.25)}
+    .creator-section{margin-top:34px;padding:30px;border:1px solid var(--rpg-line);border-radius:26px;background:radial-gradient(circle at 50% 0%,rgba(245,196,81,.07),transparent 25rem),var(--rpg-panel);box-shadow:var(--rpg-shadow)}
+    .creator-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:22px}
+    .creator-card{overflow:hidden;border:1px solid var(--rpg-line);border-radius:20px;background:rgba(255,255,255,.025);transition:transform .2s,border-color .2s}
+    .creator-card:hover{transform:translateY(-5px);border-color:rgba(245,196,81,.42)}
+    .creator-cover{min-height:145px;display:flex;align-items:center;justify-content:center;padding:24px;text-align:center;background:radial-gradient(circle at 50% 20%,rgba(255,255,255,.12),transparent 12rem),linear-gradient(135deg,#101a27,#0a0d14);border-bottom:1px solid var(--rpg-line)}
+    .creator-cover .creator-symbol{font-size:3.3rem}.creator-copy{padding:20px;text-align:center}.creator-copy h3{margin:0 0 7px}
+    .creator-copy p{margin:0 0 18px;color:var(--rpg-muted);line-height:1.55;font-size:.94rem}.creator-copy .btn{width:100%;justify-content:center}
+
     @media(max-width:1050px){
       .minigame-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
       .rank-image-grid{grid-template-columns:1fr}
@@ -363,7 +379,7 @@
       .hero{padding-top:25px}
       .hero-art{min-height:300px}
       .hero-card.main{min-height:300px}
-      .minigame-grid,.help-images,.gallery,.connect-grid{grid-template-columns:1fr!important}
+      .minigame-grid,.help-images,.gallery,.connect-grid,.community-hub,.creator-grid{grid-template-columns:1fr!important}
       .gallery .image-slot.large{grid-column:span 1}
       .help-category{padding:18px}
       .connect-dialog{padding:22px}
@@ -410,6 +426,7 @@
         <div class="hero-actions">
           <button class="btn btn-primary open-connect" type="button">🎮 JUGAR AHORA</button>
           <a class="btn btn-ghost" href="#ayuda">📚 VER GUÍAS</a>
+          <a class="btn btn-ghost" href="https://refugiocraft.tebex.store/" target="_blank" rel="noopener noreferrer">🛒 TIENDA OFICIAL</a>
         </div>
         <div class="hero-server-chip">
           <span class="online-dot"></span>
@@ -715,6 +732,60 @@
           <a href="#guia-clanes">⚔️ Crear y gestionar un clan <span>→</span></a>
           <a href="#guia-elitemobs">👹 Empezar con EliteMobs <span>→</span></a>
           <a href="#guia-vcmc">🎙️ Configurar chat de voz <span>→</span></a>
+        </div>
+      </div>
+
+
+      <!-- HUB DE COMUNIDAD Y CREADORES -->
+      <div class="community-hub" aria-label="Comunidad y enlaces oficiales">
+        <article class="community-hub-card discord">
+          <div class="community-hub-icon">💬</div>
+          <h3>Discord oficial</h3>
+          <p>Únete a la comunidad, conoce jugadores y recibe novedades de RefugioCraft.</p>
+          <a class="btn btn-primary" href="https://discord.gg/gJfxNfZWcK" target="_blank" rel="noopener noreferrer">💬 INGRESAR A DISCORD</a>
+        </article>
+        <article class="community-hub-card whatsapp">
+          <div class="community-hub-icon">🟢</div>
+          <h3>Comunidad de WhatsApp</h3>
+          <p>Forma parte del canal oficial y mantente al día con las novedades del servidor.</p>
+          <a class="btn btn-primary" href="https://whatsapp.com/channel/0029Vb9HcLrElagrZRai6D0J" target="_blank" rel="noopener noreferrer">🟢 UNIRME A WHATSAPP</a>
+        </article>
+        <article class="community-hub-card store">
+          <div class="community-hub-icon">🛒</div>
+          <h3>Tienda oficial</h3>
+          <p>Consulta rangos, productos y contenido disponible para RefugioCraft.</p>
+          <a class="btn btn-primary" href="https://refugiocraft.tebex.store/" target="_blank" rel="noopener noreferrer">🛒 IR A LA TIENDA</a>
+        </article>
+      </div>
+
+      <div class="creator-section">
+        <div class="section-heading" style="margin-bottom:0">
+          <div class="eyebrow">CONTENIDO OFICIAL</div>
+          <h2>Visita a nuestros creadores</h2>
+          <p>Descubre el contenido de RefugioCraft y de nuestra comunidad creadora.</p>
+        </div>
+        <div class="creator-grid">
+          <article class="creator-card">
+            <div class="creator-cover"><div class="creator-symbol">🌱</div></div>
+            <div class="creator-copy">
+              <h3>Vida Entre Surcos</h3><p>Contenido y directos de TikTok.</p>
+              <a class="btn btn-ghost" href="https://www.tiktok.com/@vidaentresurcos?_r=1&amp;_t=ZS-9A60F7v8Zgg" target="_blank" rel="noopener noreferrer">🎵 VISITAR CANAL</a>
+            </div>
+          </article>
+          <article class="creator-card">
+            <div class="creator-cover"><div class="creator-symbol">🏰</div></div>
+            <div class="creator-copy">
+              <h3>RefugioCraft</h3><p>Canal oficial de TikTok del servidor.</p>
+              <a class="btn btn-ghost" href="https://www.tiktok.com/@refugiocraft?_r=1&amp;_t=ZS-9A60GeCo9ys" target="_blank" rel="noopener noreferrer">🎵 VISITAR CANAL</a>
+            </div>
+          </article>
+          <article class="creator-card">
+            <div class="creator-cover"><div class="creator-symbol">🎥</div></div>
+            <div class="creator-copy">
+              <h3>Elmocrater en Twitch</h3><p>Directos y contenido en Twitch.</p>
+              <a class="btn btn-ghost" href="https://www.twitch.tv/elmocrater" target="_blank" rel="noopener noreferrer">🟣 VISITAR CANAL</a>
+            </div>
+          </article>
         </div>
       </div>
 
